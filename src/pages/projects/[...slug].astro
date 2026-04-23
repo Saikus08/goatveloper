@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, isPublishedEntry } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).filter(isPublishedEntry);
+
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <article class="article-shell">
+    <header class="article-header">
+      <div class="article-header-copy">
+        <a class="back-link" href="/projects/">All projects</a>
+        <p class="eyebrow">Project</p>
+        <h1>{project.data.title}</h1>
+        <p class="article-dek">{project.data.description}</p>
+      </div>
+
+      <div class="article-meta-panel">
+        <div class="article-meta">
+          <time datetime={project.data.started.toISOString()}>
+            Started {formatDate(project.data.started)}
+          </time>
+          <span>{project.data.status}</span>
+        </div>
+        {
+          project.data.tech.length > 0 && (
+            <ul class="tag-list" aria-label="Technologies">
+              {project.data.tech.map((tech) => (
+                <li>
+                  <span class="tag">{tech}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </header>
+
+    <div class="article-grid">
+      {
+        headings.length > 0 && (
+          <aside class="toc" aria-label="Table of contents">
+            <strong>On this page</strong>
+            <ul>
+              {headings
+                .filter((heading) => heading.depth === 2 || heading.depth === 3)
+                .map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+            </ul>
+          </aside>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

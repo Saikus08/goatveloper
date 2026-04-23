@@ -1,0 +1,212 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { site } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title = site.name,
+  description = site.description,
+  ogType = 'website',
+} = Astro.props;
+
+const baseUrl = Astro.site ?? new URL(site.url);
+const canonical = new URL(Astro.url.pathname, baseUrl).toString();
+const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          const theme = stored || (prefersDark ? "dark" : "light");
+
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} RSS`}
+      href={new URL('/rss.xml', baseUrl).toString()}
+    />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <Header />
+    <main id="content">
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const header = document.querySelector("[data-site-header]");
+        const navToggle = document.querySelector("[data-nav-toggle]");
+        const navToggleLabel = document.querySelector("[data-nav-toggle-label]");
+        const mobileNav = document.querySelector("[data-mobile-nav]");
+        const themeButtons = document.querySelectorAll("[data-theme-toggle]");
+        const mobileNavLinks = mobileNav?.querySelectorAll("a") ?? [];
+        const desktopNavMedia = window.matchMedia("(min-width: 760px)");
+
+        const setMobileNav = (open) => {
+          if (!(header instanceof HTMLElement)) return;
+          if (!(navToggle instanceof HTMLButtonElement)) return;
+          if (!(mobileNav instanceof HTMLElement)) return;
+
+          const activeElement = document.activeElement;
+
+          header.dataset.navOpen = open ? "true" : "false";
+          navToggle.setAttribute("aria-expanded", String(open));
+          navToggle.setAttribute(
+            "aria-label",
+            open ? "Close navigation menu" : "Open navigation menu",
+          );
+          mobileNav.hidden = !open;
+
+          if (navToggleLabel instanceof HTMLElement) {
+            navToggleLabel.textContent = open ? "Close" : "Menu";
+          }
+
+          if (open) {
+            requestAnimationFrame(() => {
+              const firstLink = mobileNav.querySelector("a");
+
+              if (firstLink instanceof HTMLElement) {
+                firstLink.focus();
+              }
+            });
+          } else if (activeElement instanceof Node && mobileNav.contains(activeElement)) {
+            navToggle.focus();
+          }
+        };
+
+        const syncMobileNav = () => {
+          if (desktopNavMedia.matches) {
+            setMobileNav(false);
+            return;
+          }
+
+          if (header?.dataset.navOpen !== "true" && mobileNav instanceof HTMLElement) {
+            mobileNav.hidden = true;
+          }
+        };
+
+        const setTheme = (theme) => {
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+
+          try {
+            localStorage.setItem("theme", theme);
+          } catch {}
+
+          themeButtons.forEach((button) => {
+            const nextTheme = theme === "dark" ? "light" : "dark";
+            button.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+          });
+        };
+
+        themeButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const current = root.dataset.theme === "dark" ? "dark" : "light";
+            setTheme(current === "dark" ? "light" : "dark");
+          });
+        });
+
+        if (navToggle instanceof HTMLButtonElement) {
+          navToggle.addEventListener("click", () => {
+            const isOpen = header?.dataset.navOpen === "true";
+            setMobileNav(!isOpen);
+          });
+        }
+
+        mobileNavLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            setMobileNav(false);
+          });
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            setMobileNav(false);
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!(header instanceof HTMLElement)) return;
+          if (header.dataset.navOpen !== "true") return;
+          if (event.target instanceof Node && !header.contains(event.target)) {
+            setMobileNav(false);
+          }
+        });
+
+        desktopNavMedia.addEventListener("change", syncMobileNav);
+
+        setTheme(root.dataset.theme === "dark" ? "dark" : "light");
+        syncMobileNav();
+
+        document.querySelectorAll(".prose pre").forEach((pre) => {
+          if (pre.parentElement?.classList.contains("code-frame")) {
+            return;
+          }
+
+          const frame = document.createElement("div");
+          frame.className = "code-frame";
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "copy-code";
+          button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code example");
+
+          pre.parentNode?.insertBefore(frame, pre);
+          frame.append(button, pre);
+
+          button.addEventListener("click", async () => {
+            const code = pre.textContent || "";
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "Copied";
+              setTimeout(() => {
+                button.textContent = "Copy";
+              }, 1600);
+            } catch {
+              button.textContent = "Failed";
+              setTimeout(() => {
+                button.textContent = "Copy";
+              }, 1600);
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Goatveloper home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]:
+          - generic [ref=e9]: Goatveloper
+          - generic [ref=e10]: Software Engineer
+      - generic [ref=e11]:
+        - navigation "Primary navigation" [ref=e12]:
+          - link "Home" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Articles" [ref=e14] [cursor=pointer]:
+            - /url: /articles/
+          - link "Projects" [ref=e15] [cursor=pointer]:
+            - /url: /projects/
+          - link "About" [ref=e16] [cursor=pointer]:
+            - /url: /about/
+          - link "Resume" [ref=e17] [cursor=pointer]:
+            - /url: /resume/
+        - button "Switch to dark mode" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - paragraph [ref=e24]: Writing
+      - heading "Articles" [level=1] [ref=e25]
+      - paragraph [ref=e26]: Notes from building, debugging, studying fundamentals, and shaping a stronger software engineering profile.
+      - list "All tags" [ref=e27]:
+        - listitem [ref=e28]:
+          - link "career" [ref=e29] [cursor=pointer]:
+            - /url: /tags/career/
+        - listitem [ref=e30]:
+          - link "learning" [ref=e31] [cursor=pointer]:
+            - /url: /tags/learning/
+        - listitem [ref=e32]:
+          - link "writing" [ref=e33] [cursor=pointer]:
+            - /url: /tags/writing/
+    - region "Article list" [ref=e34]:
+      - list [ref=e35]:
+        - listitem [ref=e36]:
+          - article [ref=e37]:
+            - time [ref=e39]: Apr 22, 2026
+            - generic [ref=e40]:
+              - heading "Starting a Learning Blog" [level=3] [ref=e41]:
+                - link "Starting a Learning Blog" [ref=e42] [cursor=pointer]:
+                  - /url: /articles/2026-04-22-starting-a-learning-blog/
+              - paragraph [ref=e43]: The first note in a public engineering journal built around learning, projects, and career growth.
+            - list "Tags" [ref=e44]:
+              - listitem [ref=e45]:
+                - link "career" [ref=e46] [cursor=pointer]:
+                  - /url: /tags/career/
+              - listitem [ref=e47]:
+                - link "learning" [ref=e48] [cursor=pointer]:
+                  - /url: /tags/learning/
+              - listitem [ref=e49]:
+                - link "writing" [ref=e50] [cursor=pointer]:
+                  - /url: /tags/writing/
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]: 2026 Agustin Vignolo Sotelo
+    - navigation "Footer navigation" [ref=e53]:
+      - link "RSS" [ref=e54] [cursor=pointer]:
+        - /url: /rss.xml
+      - link "Resume" [ref=e55] [cursor=pointer]:
+        - /url: /resume/
+  - generic [ref=e58]:
+    - button "Menu" [ref=e59]:
+      - img [ref=e61]
+      - generic: Menu
+    - button "Inspect" [ref=e65]:
+      - img [ref=e67]
+      - generic: Inspect
+    - button "Audit" [ref=e69]:
+      - img [ref=e71]
+      - generic: Audit
+    - button "Settings" [ref=e74]:
+      - img [ref=e76]
+      - generic: Settings

@@ -1,0 +1,83 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Goatveloper home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]:
+          - generic [ref=e9]: Goatveloper
+          - generic [ref=e10]: Software Engineer
+      - generic [ref=e11]:
+        - navigation "Primary navigation" [ref=e12]:
+          - link "Home" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Articles" [ref=e14] [cursor=pointer]:
+            - /url: /articles/
+          - link "Projects" [ref=e15] [cursor=pointer]:
+            - /url: /projects/
+          - link "About" [ref=e16] [cursor=pointer]:
+            - /url: /about/
+          - link "Resume" [ref=e17] [cursor=pointer]:
+            - /url: /resume/
+        - button "Switch to light mode" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - paragraph [ref=e23]: Resume
+      - heading "Agustin Vignolo Sotelo" [level=1] [ref=e24]
+      - paragraph [ref=e25]: Software Engineer · Montevideo, Uruguay
+      - generic [ref=e26]:
+        - generic [ref=e27]: PDF resume will appear here once added
+        - link "View projects" [ref=e28] [cursor=pointer]:
+          - /url: /projects/
+    - generic [ref=e29]:
+      - complementary [ref=e30]:
+        - heading "Profile" [level=2] [ref=e31]
+        - paragraph [ref=e32]: Software engineer building a public record of practical learning through articles, projects, and technical decisions.
+        - heading "Focus" [level=2] [ref=e33]
+        - list [ref=e34]:
+          - listitem [ref=e35]: Web applications
+          - listitem [ref=e36]: Backend fundamentals
+          - listitem [ref=e37]: Readable technical writing
+          - listitem [ref=e38]: Career growth through real projects
+        - heading "Skills" [level=2] [ref=e39]
+        - list "Skills" [ref=e40]:
+          - listitem [ref=e41]:
+            - generic [ref=e42]: TypeScript
+          - listitem [ref=e43]:
+            - generic [ref=e44]: Astro
+          - listitem [ref=e45]:
+            - generic [ref=e46]: Markdown
+          - listitem [ref=e47]:
+            - generic [ref=e48]: Content modeling
+          - listitem [ref=e49]:
+            - generic [ref=e50]: Static sites
+      - generic [ref=e51]:
+        - heading "Selected Projects" [level=2] [ref=e52]
+        - list [ref=e53]:
+          - listitem [ref=e54]:
+            - strong [ref=e55]:
+              - link "Goatveloper" [ref=e56] [cursor=pointer]:
+                - /url: /projects/goatveloper/
+            - generic [ref=e57]: Personal engineering site for publishing articles, project case studies, and resume material.
+  - contentinfo [ref=e58]:
+    - generic [ref=e59]: 2026 Agustin Vignolo Sotelo
+    - navigation "Footer navigation" [ref=e60]:
+      - link "RSS" [ref=e61] [cursor=pointer]:
+        - /url: /rss.xml
+      - link "Resume" [ref=e62] [cursor=pointer]:
+        - /url: /resume/
+  - generic [ref=e65]:
+    - button "Menu" [ref=e66]:
+      - img [ref=e68]
+      - generic: Menu
+    - button "Inspect" [ref=e72]:
+      - img [ref=e74]
+      - generic: Inspect
+    - button "Audit" [ref=e76]:
+      - img [ref=e78]
+      - generic: Audit
+    - button "Settings" [ref=e81]:
+      - img [ref=e83]
+      - generic: Settings

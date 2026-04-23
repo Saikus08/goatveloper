@@ -1,0 +1,44 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Goatveloper home" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e10]
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]
+      - complementary "A personal engineering notebook" [ref=e40]
+    - region "Start Here" [ref=e58]:
+      - heading "Start Here" [level=2] [ref=e60]
+      - list [ref=e61]
+    - region "Featured Article" [ref=e77]:
+      - generic [ref=e78]
+      - article [ref=e81]
+    - region "Latest Articles" [ref=e98]:
+      - generic [ref=e99]
+      - list
+    - region "Projects" [ref=e102]:
+      - generic [ref=e103]
+      - list [ref=e106]
+  - contentinfo [ref=e125]:
+    - generic [ref=e126]: 2026 Agustin Vignolo Sotelo
+    - navigation "Footer navigation" [ref=e127]:
+      - link "RSS" [ref=e128] [cursor=pointer]:
+        - /url: /rss.xml
+      - link "Resume" [ref=e129] [cursor=pointer]:
+        - /url: /resume/
+  - generic [ref=e132]:
+    - button "Menu" [ref=e133]:
+      - img [ref=e135]
+      - generic: Menu
+    - button "Inspect" [ref=e139]:
+      - img [ref=e141]
+      - generic: Inspect
+    - button "Audit" [ref=e143]:
+      - generic [ref=e144]
+      - generic: Audit
+    - button "Settings" [ref=e148]:
+      - img [ref=e150]
+      - generic: Settings

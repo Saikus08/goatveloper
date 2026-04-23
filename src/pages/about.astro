@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site';
+
+const audiences = [
+  'Engineers reviewing how I think through tradeoffs and implementation.',
+  'Recruiters or hiring managers looking for credible signal.',
+  'Future collaborators who want a clearer sense of my working style.',
+] as const;
+
+const principles = [
+  'Clear writing over generic tech claims.',
+  'Projects explained through decisions and tradeoffs.',
+  'A profile supported by real work, not only a polished summary.',
+] as const;
+---
+
+<BaseLayout
+  title="About"
+  description="About Agustin Vignolo Sotelo and the purpose of Goatveloper."
+>
+  <section class="page-section page-header page-header-grid">
+    <div class="page-header-main">
+      <p class="eyebrow">About</p>
+      <h1>{site.author}</h1>
+      <p>
+        I am building this site as a public engineering notebook: part learning
+        log, part portfolio, part career profile.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="/articles/">Read articles</a>
+        <a class="button" href="/resume/">View resume</a>
+      </div>
+    </div>
+
+    <aside class="page-side-panel" aria-label="Audience overview">
+      <strong class="page-side-title">Who this site is for</strong>
+      <ul class="panel-list">
+        {audiences.map((item) => <li>{item}</li>)}
+      </ul>
+    </aside>
+  </section>
+
+  <section class="page-section about-grid">
+    <div class="about-block">
+      <h2>Direction</h2>
+      <p>
+        The goal is to become a stronger software engineer by turning real work
+        into clear writing. The articles here should show how I think through
+        tradeoffs, bugs, architecture, tooling, and career growth.
+      </p>
+    </div>
+    <div class="about-block">
+      <h2>What Belongs Here</h2>
+      <ul class="plain-list">
+        <li>Short notes from things I just learned.</li>
+        <li>Deeper explanations after a concept becomes useful in practice.</li>
+        <li>Project case studies with decisions and tradeoffs.</li>
+        <li>Career reflections grounded in actual engineering work.</li>
+      </ul>
+    </div>
+    <div class="about-block">
+      <h2>What I Am Optimizing For</h2>
+      <ul class="plain-list">
+        {principles.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

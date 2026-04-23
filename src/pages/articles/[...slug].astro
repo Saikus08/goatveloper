@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import TagList from '../../components/TagList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, getReadingStats, isPublishedEntry } from '../../lib/content';
+import { site } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('articles')).filter(isPublishedEntry);
+
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+const reading = getReadingStats(article.body ?? '');
+---
+
+<BaseLayout
+  title={article.data.title}
+  description={article.data.description}
+  ogType="article"
+>
+  <article class="article-shell">
+    <header class="article-header">
+      <div class="article-header-copy">
+        <a class="back-link" href="/articles/">All articles</a>
+        <p class="eyebrow">Article</p>
+        <h1>{article.data.title}</h1>
+        <p class="article-dek">{article.data.description}</p>
+      </div>
+
+      <div class="article-meta-panel">
+        <div class="article-meta">
+          <span>By {site.author}</span>
+          <time datetime={article.data.pubDate.toISOString()}>
+            Published {formatDate(article.data.pubDate)}
+          </time>
+          {
+            article.data.updatedDate && (
+              <time datetime={article.data.updatedDate.toISOString()}>
+                Updated {formatDate(article.data.updatedDate)}
+              </time>
+            )
+          }
+          <span>{reading.minutes} min read</span>
+          <span>{reading.wordCount} words</span>
+        </div>
+        <TagList tags={article.data.tags} />
+      </div>
+    </header>
+
+    <div class="article-grid">
+      {
+        headings.length > 0 && (
+          <aside class="toc" aria-label="Table of contents">
+            <strong>On this page</strong>
+            <ul>
+              {headings
+                .filter((heading) => heading.depth === 2 || heading.depth === 3)
+                .map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+            </ul>
+          </aside>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

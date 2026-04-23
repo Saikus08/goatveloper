@@ -1,0 +1,245 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../components/ArticleCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { resume } from '../data/resume';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  type ArticleEntry,
+  formatDate,
+  isPublishedEntry,
+  sortByNewest,
+  sortProjectsByNewest,
+} from '../lib/content';
+import { site } from '../lib/site';
+
+const publishedArticles = sortByNewest(
+  (await getCollection('articles')).filter(isPublishedEntry),
+);
+const featuredArticle: ArticleEntry | undefined =
+  publishedArticles.find((article) => article.data.featured) ??
+  publishedArticles[0];
+const articles = publishedArticles
+  .filter((article) => article.id !== featuredArticle?.id)
+  .slice(0, 3);
+const projects = sortProjectsByNewest(
+  (await getCollection('projects')).filter(isPublishedEntry),
+).slice(0, 2);
+
+const quickLinks = [
+  {
+    label: 'Articles',
+    href: '/articles/',
+    description:
+      'Writing from active implementation, debugging, and the parts of software engineering I am trying to understand more clearly.',
+    cta: 'Start with the writing',
+  },
+  {
+    label: 'Projects',
+    href: '/projects/',
+    description:
+      'Case studies that explain what I built, why it mattered, and which tradeoffs shaped the result.',
+    cta: 'See case studies',
+  },
+  {
+    label: 'Resume',
+    href: '/resume/',
+    description:
+      'A concise profile, focus areas, and resume material that is supported by real work on the site.',
+    cta: 'View profile',
+  },
+] as const;
+
+const heroSignals = [
+  {
+    title: 'Writing with context',
+    description:
+      'Notes that explain the bug, decision, or tradeoff instead of only presenting the polished final answer.',
+  },
+  {
+    title: 'Projects with tradeoffs',
+    description:
+      'Case studies framed around constraints, decisions, and the engineering choices that actually shaped the result.',
+  },
+  {
+    title: 'Career signal with evidence',
+    description:
+      'Profile and resume material backed by writing, shipped work, and a clearer public record of how I think.',
+  },
+] as const;
+
+const featuredFocusAreas = resume.focusAreas.slice(0, 3);
+---
+
+<BaseLayout title={site.name} description={site.description}>
+  <section class="page-section hero">
+    <div class="hero-copy">
+      <p class="eyebrow">{site.author} · {site.role}</p>
+      <h1>Software engineering, written in public.</h1>
+      <p>
+        Goatveloper is my writing-first portfolio: a place to turn active work
+        into articles, project case studies, and a public record of how I think
+        as an engineer.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="/articles/">Read articles</a>
+        <a class="button" href="/resume/">View resume</a>
+      </div>
+      <dl class="hero-facts" aria-label="Profile summary">
+        <div>
+          <dt>Based in</dt>
+          <dd>{resume.location}</dd>
+        </div>
+        <div>
+          <dt>Focused on</dt>
+          <dd>{featuredFocusAreas.join(' · ')}</dd>
+        </div>
+      </dl>
+      <ul class="hero-signals" aria-label="What this site emphasizes">
+        {heroSignals.map((signal) => (
+          <li>
+            <strong>{signal.title}</strong>
+            <p>{signal.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <aside class="hero-panel" aria-labelledby="hero-panel-title">
+      <div class="hero-panel-brand">
+        <div class="hero-logo-shell">
+          <img
+            class="hero-logo"
+            src="/brand/goatveloper-full-light.png"
+            width="2048"
+            height="2048"
+            alt=""
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <div class="hero-panel-heading">
+          <span class="hero-panel-label">Goatveloper</span>
+          <h2 id="hero-panel-title">A writing-first engineering publication</h2>
+        </div>
+      </div>
+
+      <p class="hero-panel-copy">
+        Writing is the main product here. Projects and resume material exist to
+        support the writing with proof of work, tradeoffs, and a clearer sense
+        of how I approach engineering.
+      </p>
+
+      <ul class="hero-panel-list">
+        <li>
+          <span>Writing</span>
+          <strong>
+            debugging notes, implementation write-ups, and explanations that
+            came from real work
+          </strong>
+        </li>
+        <li>
+          <span>Projects</span>
+          <strong>
+            case studies that explain what was built, which constraints mattered,
+            and why the result looks the way it does
+          </strong>
+        </li>
+        <li>
+          <span>Profile</span>
+          <strong>
+            a more credible public profile rooted in writing, shipped work, and
+            engineering judgment
+          </strong>
+        </li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="page-section" aria-labelledby="start-here">
+    <div class="section-heading">
+      <div class="section-heading-copy">
+        <p class="eyebrow">Navigate by intent</p>
+        <h2 id="start-here">Start with the strongest signal</h2>
+      </div>
+    </div>
+    <ul class="quick-grid">
+      {quickLinks.map((item) => (
+        <li>
+          <article class="quick-card">
+            <span class="quick-label">{item.label}</span>
+            <p>{item.description}</p>
+            <a href={item.href}>{item.cta}</a>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {
+    featuredArticle && (
+      <section class="page-section" aria-labelledby="featured-article">
+        <div class="section-heading">
+          <h2 id="featured-article">Featured Article</h2>
+          <a href="/articles/">All articles</a>
+        </div>
+        <article class="spotlight-card">
+          <div class="spotlight-meta">
+            <span class="spotlight-label">Start here</span>
+            <time datetime={featuredArticle.data.pubDate.toISOString()}>
+              {formatDate(featuredArticle.data.pubDate)}
+            </time>
+          </div>
+          <div class="spotlight-copy">
+            <h3>
+              <a href={`/articles/${featuredArticle.id}/`}>
+                {featuredArticle.data.title}
+              </a>
+            </h3>
+            <p>{featuredArticle.data.description}</p>
+          </div>
+          <div class="spotlight-footer">
+            <ul class="tag-list" aria-label="Featured article tags">
+              {featuredArticle.data.tags.map((tag) => (
+                <li>
+                  <span class="tag">{tag}</span>
+                </li>
+              ))}
+            </ul>
+            <a class="button primary" href={`/articles/${featuredArticle.id}/`}>
+              Read featured note
+            </a>
+          </div>
+        </article>
+      </section>
+    )
+  }
+
+  {
+    articles.length > 0 && (
+      <section class="page-section" aria-labelledby="latest-articles">
+        <div class="section-heading">
+          <h2 id="latest-articles">Latest Articles</h2>
+          <a href="/articles/">All articles</a>
+        </div>
+        <ul class="grid-list">
+          {articles.map((article) => <li><ArticleCard article={article} /></li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    projects.length > 0 && (
+      <section class="page-section" aria-labelledby="featured-projects">
+        <div class="section-heading">
+          <h2 id="featured-projects">Projects</h2>
+          <a href="/projects/">All projects</a>
+        </div>
+        <ul class:list={['grid-list', { 'grid-list-single': projects.length === 1 }]}>
+          {projects.map((project) => <li><ProjectCard project={project} /></li>)}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

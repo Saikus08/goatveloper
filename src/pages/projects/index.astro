@@ -1,0 +1,134 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../../components/ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  formatDate,
+  isPublishedEntry,
+  sortProjectsByNewest,
+} from '../../lib/content';
+
+const projects = sortProjectsByNewest(
+  (await getCollection('projects')).filter(isPublishedEntry),
+);
+const featuredProject = projects[0];
+const remainingProjects = projects.slice(1);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Project case studies, technical decisions, and build notes."
+>
+  <section class="page-section page-header page-header-grid">
+    <div class="page-header-main">
+      <p class="eyebrow">Proof of work</p>
+      <h1>Projects</h1>
+      <p>
+        Case studies for the software and systems behind the articles. Each one
+        captures what was built, why it was built, and what tradeoffs mattered.
+      </p>
+    </div>
+
+    <aside class="page-side-panel" aria-label="Project overview">
+      <strong class="page-side-title">Project overview</strong>
+      <dl class="metric-list">
+        <div class="metric">
+          <dt>Case studies</dt>
+          <dd>{projects.length}</dd>
+        </div>
+        {
+          featuredProject && (
+            <>
+              <div class="metric">
+                <dt>Latest start</dt>
+                <dd>{formatDate(featuredProject.data.started)}</dd>
+              </div>
+              <div class="metric">
+                <dt>Status</dt>
+                <dd>{featuredProject.data.status}</dd>
+              </div>
+            </>
+          )
+        }
+      </dl>
+      <p class="page-side-copy">
+        Projects here are meant to read like engineering case studies, not a
+        thumbnail gallery. The emphasis is on decisions, constraints, and what
+        was learned.
+      </p>
+    </aside>
+  </section>
+
+  {
+    featuredProject && (
+      <section class="page-section feature-section" aria-labelledby="featured-project-case-study">
+        <div class="section-heading">
+          <div class="section-heading-copy">
+            <p class="eyebrow">Featured case study</p>
+            <h2 id="featured-project-case-study">Project spotlight</h2>
+          </div>
+        </div>
+        <article class="spotlight-card">
+          <div class="spotlight-meta">
+            <span class="spotlight-label">{featuredProject.data.status}</span>
+            <time datetime={featuredProject.data.started.toISOString()}>
+              Started {formatDate(featuredProject.data.started)}
+            </time>
+          </div>
+          <div class="spotlight-copy">
+            <h3>
+              <a href={`/projects/${featuredProject.id}/`}>
+                {featuredProject.data.title}
+              </a>
+            </h3>
+            <p>{featuredProject.data.description}</p>
+          </div>
+          <div class="spotlight-footer">
+            <ul class="tag-list" aria-label="Featured project technologies">
+              {featuredProject.data.tech.map((tech) => (
+                <li>
+                  <span class="tag">{tech}</span>
+                </li>
+              ))}
+            </ul>
+            <a class="button primary" href={`/projects/${featuredProject.id}/`}>
+              Read case study
+            </a>
+          </div>
+        </article>
+      </section>
+    )
+  }
+
+  {
+    remainingProjects.length > 0 && (
+      <section class="page-section" aria-label="Project list">
+        <div class="section-heading">
+          <h2>More projects</h2>
+        </div>
+        <ul
+          class:list={[
+            'grid-list',
+            { 'grid-list-single': remainingProjects.length === 1 },
+          ]}
+        >
+          {remainingProjects.map((project) => <li><ProjectCard project={project} /></li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    projects.length === 0 && (
+      <section class="page-section" aria-labelledby="projects-empty-state">
+        <div class="empty-state">
+          <h2 id="projects-empty-state">Project case studies will appear here soon</h2>
+          <p>
+            The goal is to add projects only when there is a real problem,
+            decision trail, or tradeoff worth documenting.
+          </p>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import type { ProjectEntry } from '../lib/content';
+import { formatDate } from '../lib/content';
+
+interface Props {
+  project: ProjectEntry;
+}
+
+const { project } = Astro.props;
+const href = `/projects/${project.id}/`;
+---
+
+<article class="project-card">
+  <div class="card-meta">
+    <time datetime={project.data.started.toISOString()}>
+      Started {formatDate(project.data.started)}
+    </time>
+    <span>{project.data.status}</span>
+  </div>
+  <div>
+    <h3><a href={href}>{project.data.title}</a></h3>
+    <p class="card-description">{project.data.description}</p>
+  </div>
+  {
+    project.data.tech.length > 0 && (
+      <ul class="tag-list" aria-label="Technologies">
+        {project.data.tech.map((tech) => (
+          <li>
+            <span class="tag">{tech}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+

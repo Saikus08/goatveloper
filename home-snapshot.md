@@ -1,0 +1,73 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Goatveloper home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]
+      - generic [ref=e11]:
+        - navigation "Primary navigation" [ref=e12]
+        - button "Switch to dark mode" [ref=e18] [cursor=pointer]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: Agustin Vignolo Sotelo · Software Engineer
+        - heading "I turn what I learn into writing, projects, and proof of work." [level=1] [ref=e26]
+        - paragraph [ref=e27]: Goatveloper is my personal engineering site. I use it to publish articles, document decisions, and build a clearer public profile around the work I am actually doing.
+        - generic [ref=e28]
+        - list "What this site emphasizes" [ref=e31]
+      - complementary "A personal engineering notebook" [ref=e41]:
+        - generic [ref=e42]
+        - paragraph [ref=e48]: The goal is to build a body of work that shows how I think as a software engineer, not only which tools I have used.
+        - list [ref=e49]
+    - region "Start Here" [ref=e59]:
+      - heading "Start Here" [level=2] [ref=e61]
+      - list [ref=e62]:
+        - listitem [ref=e63]
+        - listitem [ref=e68]
+        - listitem [ref=e73]
+    - region "Featured Article" [ref=e78]:
+      - generic [ref=e79]:
+        - heading "Featured Article" [level=2] [ref=e80]
+        - link "All articles" [ref=e81] [cursor=pointer]:
+          - /url: /articles/
+      - article [ref=e82]:
+        - generic [ref=e83]
+        - generic [ref=e86]
+        - generic [ref=e90]
+    - region "Latest Articles" [ref=e99]:
+      - generic [ref=e100]:
+        - heading "Latest Articles" [level=2] [ref=e101]
+        - link "All articles" [ref=e102] [cursor=pointer]:
+          - /url: /articles/
+      - list
+    - region "Projects" [ref=e103]:
+      - generic [ref=e104]:
+        - heading "Projects" [level=2] [ref=e105]
+        - link "All projects" [ref=e106] [cursor=pointer]:
+          - /url: /projects/
+      - list [ref=e107]:
+        - listitem [ref=e108]
+  - contentinfo [ref=e126]:
+    - generic [ref=e127]: 2026 Agustin Vignolo Sotelo
+    - navigation "Footer navigation" [ref=e128]:
+      - link "RSS" [ref=e129] [cursor=pointer]:
+        - /url: /rss.xml
+      - link "Resume" [ref=e130] [cursor=pointer]:
+        - /url: /resume/
+  - generic [ref=e133]:
+    - button "Menu" [ref=e134]:
+      - img [ref=e136]
+      - generic: Menu
+    - button "Inspect" [ref=e140]:
+      - img [ref=e142]
+      - generic: Inspect
+    - button "Audit" [ref=e144]:
+      - generic [ref=e145]:
+        - img [ref=e146]
+        - img [ref=e155]
+      - generic: Audit
+    - button "Settings" [ref=e149]:
+      - img [ref=e151]
+      - generic: Settings

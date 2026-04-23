@@ -1,0 +1,31 @@
+---
+import type { ArticleEntry } from '../lib/content';
+import { formatDate } from '../lib/content';
+import TagList from './TagList.astro';
+
+interface Props {
+  article: ArticleEntry;
+}
+
+const { article } = Astro.props;
+const href = `/articles/${article.id}/`;
+---
+
+<article class="article-card">
+  <div class="card-meta">
+    <time datetime={article.data.pubDate.toISOString()}>
+      {formatDate(article.data.pubDate)}
+    </time>
+    {
+      article.data.series && (
+        <span aria-label="Series">Series: {article.data.series}</span>
+      )
+    }
+  </div>
+  <div>
+    <h3><a href={href}>{article.data.title}</a></h3>
+    <p class="card-description">{article.data.description}</p>
+  </div>
+  <TagList tags={article.data.tags} />
+</article>
+

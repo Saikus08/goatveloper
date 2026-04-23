@@ -1,0 +1,82 @@
+---
+import BrandMark from "./BrandMark.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import { site } from '../lib/site';
+
+const pathname = Astro.url.pathname;
+const normalizePath = (value: string) =>
+  value !== '/' && value.endsWith('/') ? value.slice(0, -1) : value;
+const currentPath = normalizePath(pathname);
+const isActive = (href: string) => {
+  const normalizedHref = normalizePath(href);
+
+  return normalizedHref === '/'
+    ? currentPath === '/'
+    : currentPath === normalizedHref || currentPath.startsWith(`${normalizedHref}/`);
+};
+const navItems = site.nav;
+---
+
+<header class="site-header" data-site-header data-nav-open="false">
+  <div class="nav-shell">
+    <div class="nav-row">
+      <a class="brand" href="/" aria-label={`${site.name} home`}>
+        <span class="brand-mark" aria-hidden="true">
+          <BrandMark />
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">{site.name}</span>
+          <span class="brand-role">{site.role}</span>
+        </span>
+      </a>
+
+      <div class="nav-controls">
+        <nav class="nav-links nav-links-desktop" aria-label="Primary navigation">
+          {
+            navItems.map((item) => (
+              <a
+                class:list={['nav-link', { active: isActive(item.href) }]}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+        <ThemeToggle />
+        <button
+          class="mobile-nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-controls="mobile-nav"
+          aria-expanded="false"
+          aria-label="Open navigation menu"
+        >
+          <span class="mobile-nav-toggle-box" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span class="mobile-nav-toggle-label" data-nav-toggle-label>Menu</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav-panel" id="mobile-nav" data-mobile-nav hidden>
+      <nav class="mobile-nav-links" aria-label="Mobile navigation">
+        {
+          navItems.map((item) => (
+            <a
+              class:list={['nav-link', { active: isActive(item.href) }]}
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
+</header>

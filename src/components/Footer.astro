@@ -1,0 +1,14 @@
+---
+import { site } from '../lib/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <span>{year} {site.author}</span>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="/rss.xml">RSS</a>
+    <a href="/resume/">Resume</a>
+  </nav>
+</footer>
+

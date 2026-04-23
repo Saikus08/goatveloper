@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublishedEntry,
+  slugifyTag,
+  sortByNewest,
+  type ArticleEntry,
+} from '../../lib/content';
+
+export async function getStaticPaths() {
+  const articles = sortByNewest(
+    (await getCollection('articles')).filter(isPublishedEntry),
+  );
+  const tagMap = new Map<string, { label: string; articles: ArticleEntry[] }>();
+
+  for (const article of articles) {
+    for (const tag of article.data.tags) {
+      const slug = slugifyTag(tag);
+      const current = tagMap.get(slug) ?? { label: tag, articles: [] };
+      current.articles.push(article);
+      tagMap.set(slug, current);
+    }
+  }
+
+  return [...tagMap.entries()].map(([slug, entry]) => ({
+    params: { tag: slug },
+    props: { tag: entry.label, articles: entry.articles },
+  }));
+}
+
+const { tag, articles } = Astro.props;
+---
+
+<BaseLayout
+  title={`Articles tagged ${tag}`}
+  description={`Articles and notes tagged ${tag}.`}
+>
+  <section class="page-section page-header">
+    <p class="eyebrow">Tag</p>
+    <h1>{tag}</h1>
+    <p>Articles connected to this topic.</p>
+  </section>
+  <section class="page-section" aria-label={`Articles tagged ${tag}`}>
+    <ul class="grid-list">
+      {articles.map((article) => <li><ArticleCard article={article} /></li>)}
+    </ul>
+  </section>
+</BaseLayout>
+

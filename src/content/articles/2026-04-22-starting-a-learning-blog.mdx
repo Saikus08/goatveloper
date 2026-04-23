@@ -1,0 +1,50 @@
+---
+title: "Starting a Learning Blog"
+description: "The first note in a public engineering journal built around learning, projects, and career growth."
+pubDate: 2026-04-22
+tags: ["career", "learning", "writing"]
+featured: true
+draft: false
+---
+
+import Callout from "../../components/Callout.astro";
+
+## Why This Exists
+
+The point of this site is to make learning visible. Reading, watching, and experimenting all help, but writing forces me to decide what I actually understood.
+
+This blog is also meant to become a software engineering profile. Instead of only saying what I know, I want to show how I approach problems, tradeoffs, bugs, architecture, and career decisions.
+
+<Callout type="decision" title="Current decision">
+  The site starts with repo-based writing. That keeps articles close to the same
+  workflow I use as an engineer: edit, review the diff, commit, and publish.
+</Callout>
+
+## What I Want To Publish
+
+I want the writing here to stay close to real work:
+
+- short notes when a concept finally clicks
+- deeper explanations after I use something in a project
+- debugging stories with the actual investigation path
+- project case studies that explain decisions and tradeoffs
+- career reflections grounded in what I am building
+
+## The Writing Workflow
+
+Articles are stored as Markdown or MDX files in the repo. That keeps the writing workflow close to software engineering: edit locally, review the diff, commit the change, and publish from Git.
+
+Markdown is enough for most posts. MDX is available for posts that need interactive examples or custom components.
+
+```ts
+const articleWorkflow = [
+  "write locally",
+  "preview the page",
+  "review the diff",
+  "publish from Git",
+];
+```
+
+## Current Rule
+
+If a post teaches the reader how I think, it belongs here. If it only repeats generic documentation, it probably needs more personal context before publishing.

@@ -1,0 +1,38 @@
+{
+  "name": "goatveloper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "stitch:sync": "tsx scripts/stitch-sync.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.64",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@google/stitch-sdk": "^0.1.0",
+    "ai": "^6.0.168",
+    "astro": "^6.1.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "prettier": "^3.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "yaml-language-server": {
+      "yaml": "2.8.3"
+    }
+  }
+}

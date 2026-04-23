@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  formatDate,
+  getAllTags,
+  isPublishedEntry,
+  sortByNewest,
+} from '../../lib/content';
+
+const articles = sortByNewest(
+  (await getCollection('articles')).filter(isPublishedEntry),
+);
+const tags = getAllTags(articles);
+const featuredArticle = articles[0];
+const remainingArticles = articles.slice(1);
+---
+
+<BaseLayout
+  title="Articles"
+  description="Technical articles, learning notes, and software engineering reflections."
+>
+  <section class="page-section page-header page-header-grid">
+    <div class="page-header-main">
+      <p class="eyebrow">Writing</p>
+      <h1>Articles</h1>
+      <p>
+        Notes from building, debugging, studying fundamentals, and shaping a
+        stronger software engineering profile.
+      </p>
+      {
+        tags.length > 0 && (
+          <ul class="tag-list" aria-label="All tags">
+            {tags.map((tag) => (
+              <li>
+                <a class="tag" href={`/tags/${tag.slug}/`}>
+                  {tag.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <aside class="page-side-panel" aria-label="Writing overview">
+      <strong class="page-side-title">Writing overview</strong>
+      <dl class="metric-list">
+        <div class="metric">
+          <dt>Published notes</dt>
+          <dd>{articles.length}</dd>
+        </div>
+        <div class="metric">
+          <dt>Topics</dt>
+          <dd>{tags.length}</dd>
+        </div>
+        {
+          featuredArticle && (
+            <div class="metric">
+              <dt>Latest note</dt>
+              <dd>{formatDate(featuredArticle.data.pubDate)}</dd>
+            </div>
+          )
+        }
+      </dl>
+      <p class="page-side-copy">
+        The goal is not volume. The goal is to make useful engineering thinking
+        visible, especially around real implementation and debugging work.
+      </p>
+    </aside>
+  </section>
+
+  {
+    featuredArticle && (
+      <section class="page-section feature-section" aria-labelledby="featured-writing">
+        <div class="section-heading">
+          <div class="section-heading-copy">
+            <p class="eyebrow">Start here</p>
+            <h2 id="featured-writing">Featured writing</h2>
+          </div>
+        </div>
+        <article class="spotlight-card">
+          <div class="spotlight-meta">
+            <span class="spotlight-label">Latest note</span>
+            <time datetime={featuredArticle.data.pubDate.toISOString()}>
+              {formatDate(featuredArticle.data.pubDate)}
+            </time>
+          </div>
+          <div class="spotlight-copy">
+            <h3>
+              <a href={`/articles/${featuredArticle.id}/`}>
+                {featuredArticle.data.title}
+              </a>
+            </h3>
+            <p>{featuredArticle.data.description}</p>
+          </div>
+          <div class="spotlight-footer">
+            <ul class="tag-list" aria-label="Featured article tags">
+              {featuredArticle.data.tags.map((tag) => (
+                <li>
+                  <span class="tag">{tag}</span>
+                </li>
+              ))}
+            </ul>
+            <a class="button primary" href={`/articles/${featuredArticle.id}/`}>
+              Read article
+            </a>
+          </div>
+        </article>
+      </section>
+    )
+  }
+
+  {
+    remainingArticles.length > 0 && (
+      <section class="page-section" aria-label="Article list">
+        <div class="section-heading">
+          <h2>More writing</h2>
+        </div>
+        <ul
+          class:list={[
+            'grid-list',
+            { 'grid-list-single': remainingArticles.length === 1 },
+          ]}
+        >
+          {remainingArticles.map((article) => <li><ArticleCard article={article} /></li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    articles.length === 0 && (
+      <section class="page-section" aria-labelledby="articles-empty-state">
+        <div class="empty-state">
+          <h2 id="articles-empty-state">Writing will appear here soon</h2>
+          <p>
+            This archive is intentionally small right now. As more work becomes
+            worth publishing, this page will grow into the main writing index.
+          </p>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
