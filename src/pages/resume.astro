@@ -2,13 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { resume } from '../data/resume';
 
-const profileFacts = [
-  { label: 'Focus areas', value: String(resume.focusAreas.length) },
-  { label: 'Skills listed', value: String(resume.skills.length) },
-  {
-    label: 'PDF status',
-    value: resume.pdfAvailable ? 'ready' : 'pending',
-  },
+const summaryFacts = [
+  `${resume.focusAreas.length} focus areas`,
+  `${resume.skills.length} listed skills`,
+  resume.pdfAvailable ? 'PDF ready' : 'PDF pending',
 ] as const;
 ---
 
@@ -16,59 +13,48 @@ const profileFacts = [
   title="Resume"
   description={`${resume.name}'s software engineering resume.`}
 >
-  <section class="page-section page-header page-header-grid">
-    <div class="page-header-main">
-      <p class="eyebrow">Resume</p>
-      <h1>{resume.name}</h1>
-      <p>{resume.role} · {resume.location}</p>
-      <div class="hero-actions">
-        {
-          resume.pdfAvailable ? (
-            <a class="button primary" href={resume.pdfUrl} download>
-              Download PDF resume
-            </a>
-          ) : (
-            <span class="resume-status">PDF resume will appear here once added</span>
-          )
-        }
-        <a class="button" href="/projects/">View projects</a>
-      </div>
+  <section class="page-section page-header page-header-essay">
+    <p class="eyebrow">Resume</p>
+    <h1>{resume.name}</h1>
+    <p class="page-lede">{resume.role} · {resume.location}</p>
+    <div class="hero-actions">
+      {
+        resume.pdfAvailable ? (
+          <a class="button primary" href={resume.pdfUrl} download>
+            Download PDF resume
+          </a>
+        ) : (
+          <span class="resume-status">PDF resume will appear here once added</span>
+        )
+      }
+      <a class="button" href="/projects/">View projects</a>
     </div>
-
-    <aside class="page-side-panel" aria-label="Resume summary">
-      <strong class="page-side-title">Resume summary</strong>
-      <dl class="metric-list">
-        {profileFacts.map((item) => (
-          <div class="metric">
-            <dt>{item.label}</dt>
-            <dd>{item.value}</dd>
-          </div>
-        ))}
-      </dl>
-      <p class="page-side-copy">
-        This page is the structured web summary. The downloadable PDF will be
-        the primary resume artifact once the final version is added.
-      </p>
-    </aside>
+    <p class="resume-factline">{summaryFacts.join(' · ')}</p>
   </section>
 
-  <section class="page-section resume-grid">
-    <aside class="resume-block">
+  <section class="page-section resume-layout">
+    <section class="resume-section" data-bleed-line>
       <h2>Profile</h2>
       <p>{resume.summary}</p>
+    </section>
 
-      <h2>Focus</h2>
-      <ul class="plain-list">
-        {resume.focusAreas.map((item) => <li>{item}</li>)}
-      </ul>
+    <section class="resume-section resume-section-split" data-bleed-line>
+      <div>
+        <h2>Focus</h2>
+        <ul class="plain-list">
+          {resume.focusAreas.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
 
-      <h2>Skills</h2>
-      <ul class="tag-list" aria-label="Skills">
-        {resume.skills.map((skill) => <li><span class="tag">{skill}</span></li>)}
-      </ul>
-    </aside>
+      <div>
+        <h2>Skills</h2>
+        <ul class="tag-list" aria-label="Skills">
+          {resume.skills.map((skill) => <li><span class="tag">{skill}</span></li>)}
+        </ul>
+      </div>
+    </section>
 
-    <div class="resume-block">
+    <section class="resume-section" data-bleed-line>
       <h2>Selected Projects</h2>
       <ul class="split-list">
         {
@@ -82,38 +68,38 @@ const profileFacts = [
           ))
         }
       </ul>
+    </section>
 
-      {
-        resume.experience.length > 0 && (
-          <>
-            <h2>Experience</h2>
-            <ul class="split-list">
-              {resume.experience.map((item) => (
-                <li>
-                  <strong>{item.role}</strong>
-                  <span>{item.company}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )
-      }
+    {
+      resume.experience.length > 0 && (
+        <section class="resume-section" data-bleed-line>
+          <h2>Experience</h2>
+          <ul class="split-list">
+            {resume.experience.map((item) => (
+              <li>
+                <strong>{item.role}</strong>
+                <span>{item.company}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
-      {
-        resume.education.length > 0 && (
-          <>
-            <h2>Education</h2>
-            <ul class="split-list">
-              {resume.education.map((item) => (
-                <li>
-                  <strong>{item.title}</strong>
-                  <span>{item.institution}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )
-      }
-    </div>
+    {
+      resume.education.length > 0 && (
+        <section class="resume-section" data-bleed-line>
+          <h2>Education</h2>
+          <ul class="split-list">
+            {resume.education.map((item) => (
+              <li>
+                <strong>{item.title}</strong>
+                <span>{item.institution}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </section>
 </BaseLayout>

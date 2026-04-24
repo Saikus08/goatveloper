@@ -22,10 +22,9 @@ const href = `/articles/${article.id}/`;
       )
     }
   </div>
-  <div>
+  <div class="archive-entry-body">
     <h3><a href={href}>{article.data.title}</a></h3>
     <p class="card-description">{article.data.description}</p>
   </div>
   <TagList tags={article.data.tags} />
 </article>
-

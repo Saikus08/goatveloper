@@ -37,15 +37,14 @@ const { tag, articles } = Astro.props;
   title={`Articles tagged ${tag}`}
   description={`Articles and notes tagged ${tag}.`}
 >
-  <section class="page-section page-header">
+  <section class="page-section page-header page-header-essay">
     <p class="eyebrow">Tag</p>
     <h1>{tag}</h1>
-    <p>Articles connected to this topic.</p>
+    <p class="page-lede">Articles connected to this topic.</p>
   </section>
   <section class="page-section" aria-label={`Articles tagged ${tag}`}>
-    <ul class="grid-list">
+    <ul class="archive-list">
       {articles.map((article) => <li><ArticleCard article={article} /></li>)}
     </ul>
   </section>
 </BaseLayout>
-

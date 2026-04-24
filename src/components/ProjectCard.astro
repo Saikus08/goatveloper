@@ -17,7 +17,7 @@ const href = `/projects/${project.id}/`;
     </time>
     <span>{project.data.status}</span>
   </div>
-  <div>
+  <div class="archive-entry-body">
     <h3><a href={href}>{project.data.title}</a></h3>
     <p class="card-description">{project.data.description}</p>
   </div>
@@ -33,4 +33,3 @@ const href = `/projects/${project.id}/`;
     )
   }
 </article>
-

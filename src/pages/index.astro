@@ -19,227 +19,158 @@ const publishedArticles = sortByNewest(
 const featuredArticle: ArticleEntry | undefined =
   publishedArticles.find((article) => article.data.featured) ??
   publishedArticles[0];
-const articles = publishedArticles
+const articleArchive = publishedArticles
   .filter((article) => article.id !== featuredArticle?.id)
   .slice(0, 3);
 const projects = sortProjectsByNewest(
   (await getCollection('projects')).filter(isPublishedEntry),
-).slice(0, 2);
-
-const quickLinks = [
-  {
-    label: 'Articles',
-    href: '/articles/',
-    description:
-      'Writing from active implementation, debugging, and the parts of software engineering I am trying to understand more clearly.',
-    cta: 'Start with the writing',
-  },
-  {
-    label: 'Projects',
-    href: '/projects/',
-    description:
-      'Case studies that explain what I built, why it mattered, and which tradeoffs shaped the result.',
-    cta: 'See case studies',
-  },
-  {
-    label: 'Resume',
-    href: '/resume/',
-    description:
-      'A concise profile, focus areas, and resume material that is supported by real work on the site.',
-    cta: 'View profile',
-  },
-] as const;
-
-const heroSignals = [
-  {
-    title: 'Writing with context',
-    description:
-      'Notes that explain the bug, decision, or tradeoff instead of only presenting the polished final answer.',
-  },
-  {
-    title: 'Projects with tradeoffs',
-    description:
-      'Case studies framed around constraints, decisions, and the engineering choices that actually shaped the result.',
-  },
-  {
-    title: 'Career signal with evidence',
-    description:
-      'Profile and resume material backed by writing, shipped work, and a clearer public record of how I think.',
-  },
-] as const;
-
-const featuredFocusAreas = resume.focusAreas.slice(0, 3);
+);
+const currentProject = projects[0];
 ---
 
-<BaseLayout title={site.name} description={site.description}>
-  <section class="page-section hero">
-    <div class="hero-copy">
-      <p class="eyebrow">{site.author} · {site.role}</p>
-      <h1>Software engineering, written in public.</h1>
-      <p>
-        Goatveloper is my writing-first portfolio: a place to turn active work
-        into articles, project case studies, and a public record of how I think
-        as an engineer.
-      </p>
-      <div class="hero-actions">
-        <a class="button primary" href="/articles/">Read articles</a>
-        <a class="button" href="/resume/">View resume</a>
+<BaseLayout
+  title={site.name}
+  description={site.description}
+  bodyClass="page-home"
+>
+  <div class="home-shell">
+    <div class="home-atmosphere" aria-hidden="true">
+      <div class="home-mesh">
+        <span class="home-mesh-shape home-mesh-shape-one"></span>
+        <span class="home-mesh-shape home-mesh-shape-two"></span>
+        <span class="home-mesh-shape home-mesh-shape-three"></span>
+        <span class="home-mesh-noise"></span>
       </div>
-      <dl class="hero-facts" aria-label="Profile summary">
-        <div>
-          <dt>Based in</dt>
-          <dd>{resume.location}</dd>
-        </div>
-        <div>
-          <dt>Focused on</dt>
-          <dd>{featuredFocusAreas.join(' · ')}</dd>
-        </div>
-      </dl>
-      <ul class="hero-signals" aria-label="What this site emphasizes">
-        {heroSignals.map((signal) => (
-          <li>
-            <strong>{signal.title}</strong>
-            <p>{signal.description}</p>
-          </li>
-        ))}
-      </ul>
+
+      <svg
+        class="home-tracker"
+        viewBox="0 0 100 220"
+        preserveAspectRatio="none"
+      >
+        <path
+          class="home-tracker-line"
+          d="M72 18C64 24 58 31 55 41C52 53 58 62 66 70C74 78 75 88 69 97C62 107 49 114 45 125C41 137 47 146 56 154C64 161 67 171 63 183C60 192 53 200 46 206"
+        ></path>
+        <circle class="home-tracker-node" cx="72" cy="18" r="1.2"></circle>
+        <circle class="home-tracker-node" cx="45" cy="125" r="1.1"></circle>
+        <circle class="home-tracker-node" cx="46" cy="206" r="1.2"></circle>
+      </svg>
     </div>
 
-    <aside class="hero-panel" aria-labelledby="hero-panel-title">
-      <div class="hero-panel-brand">
-        <div class="hero-logo-shell">
-          <img
-            class="hero-logo"
-            src="/brand/goatveloper-full-light.png"
-            width="2048"
-            height="2048"
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
+    <section class="page-section home-hero" data-reveal style="--reveal-delay: 0ms">
+
+      <div class="home-copy">
+        <p class="eyebrow">{site.author} · {site.role}</p>
+        <h1>Writing that makes the engineering visible.</h1>
+        <p class="home-lede">
+          Goatveloper is where I turn implementation work into articles, project
+          case studies, and a public record of what I actually understood.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="/articles/">Read articles</a>
+          <a class="button" href="/resume/">View resume</a>
         </div>
-        <div class="hero-panel-heading">
-          <span class="hero-panel-label">Goatveloper</span>
-          <h2 id="hero-panel-title">A writing-first engineering publication</h2>
-        </div>
+        <p class="home-factline">
+          {resume.location} · writing-first portfolio · software engineering in
+          public
+        </p>
       </div>
 
-      <p class="hero-panel-copy">
-        Writing is the main product here. Projects and resume material exist to
-        support the writing with proof of work, tradeoffs, and a clearer sense
-        of how I approach engineering.
-      </p>
-
-      <ul class="hero-panel-list">
-        <li>
-          <span>Writing</span>
-          <strong>
-            debugging notes, implementation write-ups, and explanations that
-            came from real work
-          </strong>
-        </li>
-        <li>
-          <span>Projects</span>
-          <strong>
-            case studies that explain what was built, which constraints mattered,
-            and why the result looks the way it does
-          </strong>
-        </li>
-        <li>
-          <span>Profile</span>
-          <strong>
-            a more credible public profile rooted in writing, shipped work, and
-            engineering judgment
-          </strong>
-        </li>
-      </ul>
-    </aside>
-  </section>
-
-  <section class="page-section" aria-labelledby="start-here">
-    <div class="section-heading">
-      <div class="section-heading-copy">
-        <p class="eyebrow">Navigate by intent</p>
-        <h2 id="start-here">Start with the strongest signal</h2>
-      </div>
-    </div>
-    <ul class="quick-grid">
-      {quickLinks.map((item) => (
-        <li>
-          <article class="quick-card">
-            <span class="quick-label">{item.label}</span>
-            <p>{item.description}</p>
-            <a href={item.href}>{item.cta}</a>
-          </article>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  {
-    featuredArticle && (
-      <section class="page-section" aria-labelledby="featured-article">
-        <div class="section-heading">
-          <h2 id="featured-article">Featured Article</h2>
-          <a href="/articles/">All articles</a>
-        </div>
-        <article class="spotlight-card">
-          <div class="spotlight-meta">
-            <span class="spotlight-label">Start here</span>
-            <time datetime={featuredArticle.data.pubDate.toISOString()}>
-              {formatDate(featuredArticle.data.pubDate)}
-            </time>
-          </div>
-          <div class="spotlight-copy">
-            <h3>
+      {
+        featuredArticle && (
+          <article class="home-pinned">
+            <div class="home-pinned-meta">
+              <span class="home-pinned-label">Pinned note</span>
+              <time datetime={featuredArticle.data.pubDate.toISOString()}>
+                {formatDate(featuredArticle.data.pubDate)}
+              </time>
+            </div>
+            <h2>
               <a href={`/articles/${featuredArticle.id}/`}>
                 {featuredArticle.data.title}
               </a>
-            </h3>
+            </h2>
             <p>{featuredArticle.data.description}</p>
-          </div>
-          <div class="spotlight-footer">
-            <ul class="tag-list" aria-label="Featured article tags">
+            <ul class="tag-list" aria-label="Pinned note topics">
               {featuredArticle.data.tags.map((tag) => (
                 <li>
                   <span class="tag">{tag}</span>
                 </li>
               ))}
             </ul>
-            <a class="button primary" href={`/articles/${featuredArticle.id}/`}>
-              Read featured note
+            <a class="home-pinned-link" href={`/articles/${featuredArticle.id}/`}>
+              Read the note
             </a>
+          </article>
+        )
+      }
+    </section>
+
+    <section
+      class="page-section home-essay"
+      data-bleed-line
+      data-reveal
+      style="--reveal-delay: 70ms"
+    >
+      <div class="section-intro">
+        <p class="eyebrow">What this is</p>
+        <h2>Not a landing page. A working publication.</h2>
+      </div>
+      <div class="home-essay-grid">
+        <p>
+          Good engineering writing starts with real work: a bug, a tradeoff, a
+          refactor, a system that only becomes clear when I force myself to
+          explain it.
+        </p>
+        <p>
+          The project and resume sides of this site matter because they are tied
+          to the same body of work, not because they sit beside it as decoration.
+        </p>
+      </div>
+    </section>
+
+    {
+      articleArchive.length > 0 && (
+        <section
+          class="page-section home-archive"
+          aria-labelledby="selected-writing"
+          data-bleed-line
+          data-reveal
+          style="--reveal-delay: 130ms"
+        >
+          <div class="section-heading">
+            <div class="section-heading-copy">
+              <p class="eyebrow">Selected writing</p>
+              <h2 id="selected-writing">More from the archive</h2>
+            </div>
+            <a href="/articles/">All articles</a>
           </div>
-        </article>
-      </section>
-    )
-  }
+          <ul class="archive-list">
+            {articleArchive.map((article) => <li><ArticleCard article={article} /></li>)}
+          </ul>
+        </section>
+      )
+    }
 
-  {
-    articles.length > 0 && (
-      <section class="page-section" aria-labelledby="latest-articles">
-        <div class="section-heading">
-          <h2 id="latest-articles">Latest Articles</h2>
-          <a href="/articles/">All articles</a>
-        </div>
-        <ul class="grid-list">
-          {articles.map((article) => <li><ArticleCard article={article} /></li>)}
-        </ul>
-      </section>
-    )
-  }
-
-  {
-    projects.length > 0 && (
-      <section class="page-section" aria-labelledby="featured-projects">
-        <div class="section-heading">
-          <h2 id="featured-projects">Projects</h2>
-          <a href="/projects/">All projects</a>
-        </div>
-        <ul class:list={['grid-list', { 'grid-list-single': projects.length === 1 }]}>
-          {projects.map((project) => <li><ProjectCard project={project} /></li>)}
-        </ul>
-      </section>
-    )
-  }
+    {
+      currentProject && (
+        <section
+          class="page-section home-current"
+          aria-labelledby="current-project"
+          data-bleed-line
+          data-reveal
+          style="--reveal-delay: 190ms"
+        >
+          <div class="section-heading">
+            <div class="section-heading-copy">
+              <p class="eyebrow">Current project</p>
+              <h2 id="current-project">Built in public</h2>
+            </div>
+            <a href="/projects/">All projects</a>
+          </div>
+          <ProjectCard project={currentProject} />
+        </section>
+      )
+    }
+  </div>
 </BaseLayout>

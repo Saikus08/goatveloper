@@ -1,17 +1,23 @@
 ---
+import { existsSync } from 'node:fs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/site';
 
+const portraitPath = '/profile/agustin-vignolo-portrait.jpg';
+const portraitAvailable = existsSync(
+  new URL('../../public/profile/agustin-vignolo-portrait.jpg', import.meta.url),
+);
+
 const audiences = [
   'Engineers reviewing how I think through tradeoffs and implementation.',
-  'Recruiters or hiring managers looking for credible signal.',
-  'Future collaborators who want a clearer sense of my working style.',
+  'Recruiters or hiring managers looking for signal that feels earned.',
+  'Future collaborators who want a clearer sense of how I work.',
 ] as const;
 
 const principles = [
-  'Clear writing over generic tech claims.',
+  'Clear writing over vague technical claims.',
   'Projects explained through decisions and tradeoffs.',
-  'A profile supported by real work, not only a polished summary.',
+  'A profile that is backed by real work, not only a polished summary.',
 ] as const;
 ---
 
@@ -19,13 +25,13 @@ const principles = [
   title="About"
   description="About Agustin Vignolo Sotelo and the purpose of Goatveloper."
 >
-  <section class="page-section page-header page-header-grid">
-    <div class="page-header-main">
+  <section class="page-section page-header page-header-essay about-hero">
+    <div class="about-hero-copy">
       <p class="eyebrow">About</p>
       <h1>{site.author}</h1>
-      <p>
-        I am building this site as a public engineering notebook: part learning
-        log, part portfolio, part career profile.
+      <p class="page-lede">
+        I am building Goatveloper as a writing-first engineering site: part
+        publication, part project record, part resume evidence.
       </p>
       <div class="hero-actions">
         <a class="button primary" href="/articles/">Read articles</a>
@@ -33,34 +39,62 @@ const principles = [
       </div>
     </div>
 
-    <aside class="page-side-panel" aria-label="Audience overview">
-      <strong class="page-side-title">Who this site is for</strong>
-      <ul class="panel-list">
-        {audiences.map((item) => <li>{item}</li>)}
-      </ul>
+    <aside class="about-portrait-panel" aria-label="Portrait">
+      {
+        portraitAvailable ? (
+          <img
+            class="about-portrait-image"
+            src={portraitPath}
+            alt="Portrait of Agustin Vignolo Sotelo"
+            width="1024"
+            height="1024"
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <div class="about-portrait-placeholder" aria-hidden="true">
+            <span>AVS</span>
+          </div>
+        )
+      }
     </aside>
   </section>
 
-  <section class="page-section about-grid">
-    <div class="about-block">
-      <h2>Direction</h2>
+  <section class="page-section essay-stack">
+    <div class="essay-block" data-bleed-line>
+      <h2>Why build it this way</h2>
       <p>
         The goal is to become a stronger software engineer by turning real work
-        into clear writing. The articles here should show how I think through
-        tradeoffs, bugs, architecture, tooling, and career growth.
+        into writing that is specific, readable, and honest about tradeoffs.
+      </p>
+      <p>
+        I want the site to show how I think through bugs, architecture,
+        implementation details, and career growth—not only which tools I have
+        used.
       </p>
     </div>
-    <div class="about-block">
-      <h2>What Belongs Here</h2>
-      <ul class="plain-list">
-        <li>Short notes from things I just learned.</li>
-        <li>Deeper explanations after a concept becomes useful in practice.</li>
-        <li>Project case studies with decisions and tradeoffs.</li>
-        <li>Career reflections grounded in actual engineering work.</li>
-      </ul>
+
+    <div class="essay-block essay-block-split" data-bleed-line>
+      <section>
+        <h2>Who I want it to help</h2>
+        <ul class="plain-list">
+          {audiences.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section>
+        <h2>What belongs here</h2>
+        <ul class="plain-list">
+          <li>Short notes from things I just learned.</li>
+          <li>Deeper explanations after a concept becomes useful in practice.</li>
+          <li>Project case studies with decisions and tradeoffs.</li>
+          <li>Career reflections grounded in actual engineering work.</li>
+        </ul>
+      </section>
     </div>
-    <div class="about-block">
-      <h2>What I Am Optimizing For</h2>
+
+    <div class="essay-block" data-bleed-line>
+      <h2>What I optimize for</h2>
       <ul class="plain-list">
         {principles.map((item) => <li>{item}</li>)}
       </ul>

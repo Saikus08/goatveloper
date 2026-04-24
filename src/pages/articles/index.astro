@@ -13,24 +13,25 @@ const articles = sortByNewest(
   (await getCollection('articles')).filter(isPublishedEntry),
 );
 const tags = getAllTags(articles);
-const featuredArticle = articles[0];
-const remainingArticles = articles.slice(1);
+const featuredArticle = articles.find((article) => article.data.featured) ?? articles[0];
+const remainingArticles = articles.filter((article) => article.id !== featuredArticle?.id);
 ---
 
 <BaseLayout
   title="Articles"
   description="Technical articles, learning notes, and software engineering reflections."
 >
-  <section class="page-section page-header page-header-grid">
-    <div class="page-header-main">
-      <p class="eyebrow">Writing</p>
-      <h1>Articles</h1>
-      <p>
-        Notes from building, debugging, studying fundamentals, and shaping a
-        stronger software engineering profile.
-      </p>
-      {
-        tags.length > 0 && (
+  <section class="page-section page-header page-header-essay">
+    <p class="eyebrow">Writing</p>
+    <h1>Articles</h1>
+    <p class="page-lede">
+      Notes from building, debugging, and studying the parts of software
+      engineering that become clearer when written down.
+    </p>
+    {
+      tags.length > 0 && (
+        <div class="topic-strip">
+          <span class="micro-label">Topics</span>
           <ul class="tag-list" aria-label="All tags">
             {tags.map((tag) => (
               <li>
@@ -40,45 +41,21 @@ const remainingArticles = articles.slice(1);
               </li>
             ))}
           </ul>
-        )
-      }
-    </div>
-
-    <aside class="page-side-panel" aria-label="Writing overview">
-      <strong class="page-side-title">Writing overview</strong>
-      <dl class="metric-list">
-        <div class="metric">
-          <dt>Published notes</dt>
-          <dd>{articles.length}</dd>
         </div>
-        <div class="metric">
-          <dt>Topics</dt>
-          <dd>{tags.length}</dd>
-        </div>
-        {
-          featuredArticle && (
-            <div class="metric">
-              <dt>Latest note</dt>
-              <dd>{formatDate(featuredArticle.data.pubDate)}</dd>
-            </div>
-          )
-        }
-      </dl>
-      <p class="page-side-copy">
-        The goal is not volume. The goal is to make useful engineering thinking
-        visible, especially around real implementation and debugging work.
-      </p>
-    </aside>
+      )
+    }
   </section>
 
   {
     featuredArticle && (
-      <section class="page-section feature-section" aria-labelledby="featured-writing">
-        <div class="section-heading">
-          <div class="section-heading-copy">
-            <p class="eyebrow">Start here</p>
-            <h2 id="featured-writing">Featured writing</h2>
-          </div>
+      <section
+        class="page-section page-feature"
+        aria-labelledby="pinned-article"
+        data-bleed-line
+      >
+        <div class="section-intro">
+          <p class="eyebrow">Pinned</p>
+          <h2 id="pinned-article">Start with this note</h2>
         </div>
         <article class="spotlight-card">
           <div class="spotlight-meta">
@@ -96,7 +73,7 @@ const remainingArticles = articles.slice(1);
             <p>{featuredArticle.data.description}</p>
           </div>
           <div class="spotlight-footer">
-            <ul class="tag-list" aria-label="Featured article tags">
+            <ul class="tag-list" aria-label="Pinned article tags">
               {featuredArticle.data.tags.map((tag) => (
                 <li>
                   <span class="tag">{tag}</span>
@@ -114,16 +91,11 @@ const remainingArticles = articles.slice(1);
 
   {
     remainingArticles.length > 0 && (
-      <section class="page-section" aria-label="Article list">
-        <div class="section-heading">
-          <h2>More writing</h2>
+      <section class="page-section" aria-label="Article archive" data-bleed-line>
+        <div class="section-intro">
+          <h2>Archive</h2>
         </div>
-        <ul
-          class:list={[
-            'grid-list',
-            { 'grid-list-single': remainingArticles.length === 1 },
-          ]}
-        >
+        <ul class="archive-list">
           {remainingArticles.map((article) => <li><ArticleCard article={article} /></li>)}
         </ul>
       </section>
@@ -132,12 +104,16 @@ const remainingArticles = articles.slice(1);
 
   {
     articles.length === 0 && (
-      <section class="page-section" aria-labelledby="articles-empty-state">
+      <section
+        class="page-section"
+        aria-labelledby="articles-empty-state"
+        data-bleed-line
+      >
         <div class="empty-state">
           <h2 id="articles-empty-state">Writing will appear here soon</h2>
           <p>
-            This archive is intentionally small right now. As more work becomes
-            worth publishing, this page will grow into the main writing index.
+            This archive is intentionally small right now. More notes will show
+            up here as the work becomes worth publishing.
           </p>
         </div>
       </section>
