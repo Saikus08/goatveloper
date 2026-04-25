@@ -262,6 +262,36 @@ const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
           window.addEventListener("resize", updateHomeProgress);
         }
 
+        const flipCards = Array.from(document.querySelectorAll("[data-flip-card]"));
+
+        flipCards.forEach((card) => {
+          if (!(card instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          const prompt = card.querySelector("[data-flip-card-prompt]");
+
+          const setFlipped = (flipped) => {
+            card.dataset.flipped = flipped ? "true" : "false";
+            card.setAttribute("aria-pressed", String(flipped));
+            card.setAttribute(
+              "aria-label",
+              flipped ? "Show Goatveloper mark" : "Show portrait photo",
+            );
+
+            if (prompt instanceof HTMLElement) {
+              prompt.textContent = flipped ? "Show Goatveloper" : "Show portrait";
+            }
+          };
+
+          setFlipped(card.dataset.flipped === "true");
+
+          card.addEventListener("click", () => {
+            const next = card.dataset.flipped !== "true";
+            setFlipped(next);
+          });
+        });
+
         document.querySelectorAll(".prose pre").forEach((pre) => {
           if (pre.parentElement?.classList.contains("code-frame")) {
             return;

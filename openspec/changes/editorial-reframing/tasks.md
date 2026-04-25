@@ -40,3 +40,4 @@
 - [x] Add a subtle dashed editorial tracker through homepage whitespace
 - [x] Extend major separators beyond the constrained content column
 - [x] Add an About hero portrait slot using the expected public image path
+- [x] Add an About hero media flip interaction between the Goatveloper mark and portrait

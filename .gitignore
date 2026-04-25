@@ -7,7 +7,9 @@ dist/
 npm-debug.log*
 
 # Local browser-inspection artifacts
-.playwright-mcp/
+.playwright-mcp
 /*.png
 /*.txt
 /*snapshot*.md
+.gemini/skills/learn-while-building
+openspec

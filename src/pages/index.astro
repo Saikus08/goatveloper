@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import ArticleCard from '../components/ArticleCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { resume } from '../data/resume';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
@@ -9,7 +8,6 @@ import {
   formatDate,
   isPublishedEntry,
   sortByNewest,
-  sortProjectsByNewest,
 } from '../lib/content';
 import { site } from '../lib/site';
 
@@ -22,10 +20,6 @@ const featuredArticle: ArticleEntry | undefined =
 const articleArchive = publishedArticles
   .filter((article) => article.id !== featuredArticle?.id)
   .slice(0, 3);
-const projects = sortProjectsByNewest(
-  (await getCollection('projects')).filter(isPublishedEntry),
-);
-const currentProject = projects[0];
 ---
 
 <BaseLayout
@@ -63,22 +57,20 @@ const currentProject = projects[0];
         <p class="eyebrow">{site.author} · {site.role}</p>
         <h1>Writing that makes the engineering visible.</h1>
         <p class="home-lede">
-          Goatveloper is where I turn implementation work into articles, project
-          case studies, and a public record of what I actually understood.
+          Goatveloper is where I write about software, projects, and the parts
+          of the work that only become clear once I slow down and explain them.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="/articles/">Read articles</a>
           <a class="button" href="/resume/">View resume</a>
         </div>
-        <p class="home-factline">
-          {resume.location} · writing-first portfolio · software engineering in
-          public
-        </p>
+        <p class="home-factline">{resume.location}</p>
       </div>
 
       {
         featuredArticle && (
           <article class="home-pinned">
+            <span class="home-pin" aria-hidden="true"></span>
             <div class="home-pinned-meta">
               <span class="home-pinned-label">Pinned note</span>
               <time datetime={featuredArticle.data.pubDate.toISOString()}>
@@ -113,18 +105,19 @@ const currentProject = projects[0];
       style="--reveal-delay: 70ms"
     >
       <div class="section-intro">
-        <p class="eyebrow">What this is</p>
-        <h2>Not a landing page. A working publication.</h2>
+        <p class="eyebrow">Why publish at all</p>
+        <h2>Because good work deserves a thinking trail.</h2>
       </div>
       <div class="home-essay-grid">
         <p>
-          Good engineering writing starts with real work: a bug, a tradeoff, a
-          refactor, a system that only becomes clear when I force myself to
-          explain it.
+          Publishing helps me slow down long enough to understand what the work
+          was really asking from me. Writing reinforces what I built, what I
+          missed, and why a decision mattered.
         </p>
         <p>
-          The project and resume sides of this site matter because they are tied
-          to the same body of work, not because they sit beside it as decoration.
+          I also believe knowledge should be shared. A lot of improvement
+          happens in community, through people leaving useful trails for each
+          other, and I want this site to do that in my own way.
         </p>
       </div>
     </section>
@@ -152,25 +145,5 @@ const currentProject = projects[0];
       )
     }
 
-    {
-      currentProject && (
-        <section
-          class="page-section home-current"
-          aria-labelledby="current-project"
-          data-bleed-line
-          data-reveal
-          style="--reveal-delay: 190ms"
-        >
-          <div class="section-heading">
-            <div class="section-heading-copy">
-              <p class="eyebrow">Current project</p>
-              <h2 id="current-project">Built in public</h2>
-            </div>
-            <a href="/projects/">All projects</a>
-          </div>
-          <ProjectCard project={currentProject} />
-        </section>
-      )
-    }
   </div>
 </BaseLayout>

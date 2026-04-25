@@ -4,6 +4,8 @@
 
 Goatveloper presents a writing-first personal software engineering site. The experience should feel authored, modern, calm, and technically serious without becoming flashy or generic.
 
+- Public-facing site copy may use the shorter display name "Agustin Vignolo" while the full formal name remains appropriate for resume artifacts.
+
 ## Header and navigation
 
 - Desktop navigation must remain compact and visible in the header.
@@ -22,6 +24,8 @@ Goatveloper presents a writing-first personal software engineering site. The exp
 - The homepage should feel more editorial and asymmetrical than the inner pages.
 - The homepage should avoid repeated dashboard-like cards and repeated three-column summary patterns.
 - The homepage may feature one pinned note and one current project, but these should read like editorial selections rather than product cards.
+- The homepage does not need to feature a current project when that section does not add strong signal yet.
+- The pinned note may use subtle physical cues such as a pin or paper-tension treatment, as long as it stays restrained.
 - The homepage may use section-level scroll reveal and a subtle guided dashed path through whitespace, but only in a restrained way.
 - Sections that have no content to show should not render as empty layouts.
 
@@ -40,6 +44,8 @@ Goatveloper presents a writing-first personal software engineering site. The exp
 - Articles index and projects index should behave like publication/archive pages rather than card-first grids.
 - About and resume pages should rely on narrative sections and strong typography more than decorative side panels.
 - The About page should support a portrait alongside the main introduction when a public portrait image is available.
+- The About hero media block may use one restrained interactive cue, such as flipping between the Goatveloper mark and the portrait, as long as it remains optional and visually calm.
+- The About page should stay concise and not over-explain the site's audience or internal strategy.
 - Sparse article and project indexes may use a pinned/spotlight treatment so the page still feels intentional with very little content.
 - Article and project indexes should provide explicit empty states when no entries are available.
 - Article detail pages must preserve readable prose, TOC behavior, code-copy affordances, and clear metadata.

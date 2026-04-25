@@ -1,6 +1,6 @@
 export const site = {
   name: "Goatveloper",
-  author: "Agustin Vignolo Sotelo",
+  author: "Agustin Vignolo",
   role: "Software Engineer",
   url: import.meta.env.SITE_URL ?? "https://goatveloper.dev",
   description:
