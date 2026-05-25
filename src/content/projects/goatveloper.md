@@ -4,7 +4,7 @@ description: "A personal software engineering site for articles, project case st
 started: 2026-04-22
 status: "active"
 tech: ["Astro", "TypeScript", "Markdown", "Content Collections"]
-featured: true
+featured: false
 draft: false
 ---
 
