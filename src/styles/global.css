@@ -1147,6 +1147,56 @@ main {
   font-weight: 700;
 }
 
+.resume-entry-list {
+  display: grid;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume-entry {
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.resume-entry-heading {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.resume-entry-heading strong {
+  display: block;
+  font-size: 1.08rem;
+  line-height: 1.2;
+}
+
+.resume-entry-company {
+  margin: 0.22rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-prose);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.resume-entry-period {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-highlights {
+  gap: 0.7rem;
+}
+
+.resume-highlights li {
+  font-size: 1rem;
+}
+
 .split-list {
   display: grid;
   gap: 1rem;
@@ -1529,6 +1579,12 @@ main {
 
   .split-list li {
     grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .resume-entry-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 1rem;
   }

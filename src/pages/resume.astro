@@ -3,9 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { resume } from '../data/resume';
 
 const summaryFacts = [
-  `${resume.focusAreas.length} focus areas`,
-  `${resume.skills.length} listed skills`,
-  resume.pdfAvailable ? 'PDF ready' : 'PDF pending',
+  `${resume.experience.length} roles`,
+  `${resume.projects.length} selected projects`,
+  resume.education[0]?.period ?? 'Education in progress',
 ] as const;
 ---
 
@@ -38,6 +38,57 @@ const summaryFacts = [
       <p>{resume.summary}</p>
     </section>
 
+    {
+      resume.experience.length > 0 && (
+        <section class="resume-section" data-bleed-line>
+          <h2>Experience</h2>
+          <ul class="resume-entry-list">
+            {resume.experience.map((item) => (
+              <li class="resume-entry">
+                <div class="resume-entry-heading">
+                  <div>
+                    <strong>{item.role}</strong>
+                    <p class="resume-entry-company">
+                      {item.company}
+                      {item.location && <> · {item.location}</>}
+                    </p>
+                  </div>
+                  <span class="resume-entry-period">{item.period}</span>
+                </div>
+                <ul class="plain-list resume-highlights">
+                  {item.highlights.map((highlight) => <li>{highlight}</li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      resume.education.length > 0 && (
+        <section class="resume-section" data-bleed-line>
+          <h2>Education</h2>
+          <ul class="resume-entry-list">
+            {resume.education.map((item) => (
+              <li class="resume-entry">
+                <div class="resume-entry-heading">
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p class="resume-entry-company">{item.institution}</p>
+                  </div>
+                  <span class="resume-entry-period">{item.period}</span>
+                </div>
+                <ul class="plain-list resume-highlights">
+                  {item.details.map((detail) => <li>{detail}</li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <section class="resume-section resume-section-split" data-bleed-line>
       <div>
         <h2>Focus</h2>
@@ -47,8 +98,8 @@ const summaryFacts = [
       </div>
 
       <div>
-        <h2>Skills</h2>
-        <ul class="tag-list" aria-label="Skills">
+        <h2>Technologies I’ve worked with</h2>
+        <ul class="tag-list" aria-label="Technologies I’ve worked with">
           {resume.skills.map((skill) => <li><span class="tag">{skill}</span></li>)}
         </ul>
       </div>
@@ -71,30 +122,18 @@ const summaryFacts = [
     </section>
 
     {
-      resume.experience.length > 0 && (
+      resume.links.length > 0 && (
         <section class="resume-section" data-bleed-line>
-          <h2>Experience</h2>
+          <h2>Selected links</h2>
           <ul class="split-list">
-            {resume.experience.map((item) => (
+            {resume.links.map((item) => (
               <li>
-                <strong>{item.role}</strong>
-                <span>{item.company}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      resume.education.length > 0 && (
-        <section class="resume-section" data-bleed-line>
-          <h2>Education</h2>
-          <ul class="split-list">
-            {resume.education.map((item) => (
-              <li>
-                <strong>{item.title}</strong>
-                <span>{item.institution}</span>
+                <strong>
+                  <a href={item.href} target="_blank" rel="noreferrer">
+                    {item.label}
+                  </a>
+                </strong>
+                <span>{item.href}</span>
               </li>
             ))}
           </ul>
