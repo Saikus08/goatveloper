@@ -1,6 +1,6 @@
 ---
 title: "When AI Workspace Config Stops Being Personal Setup"
-description: "A practical URadar case study about turning local AI tooling into shared repository governance without committing secrets, sessions, or generated state."
+description: "A practical case study about turning local AI tooling into shared repository governance without committing secrets, sessions, or generated state."
 pubDate: 2026-05-25
 tags: ["developer workflow", "repository governance", "ai tooling", "git"]
 series: "Senior Engineering Cases"
@@ -14,7 +14,7 @@ Install the CLI. Add a few agents. Connect a couple of MCP servers. Keep some pr
 
 That works while the setup lives only in one developer's machine. It stops working when the repository starts depending on those decisions.
 
-In URadar, the local workflow had OpenCode agents, Omo continuation state, OpenSpec changes, Context7, GitHub MCP, and ClickUp MCP all sitting near the same project. Some of that belongs in git. Some of it absolutely does not.
+In one real repository, the local workflow had OpenCode agents, Omo continuation state, OpenSpec changes, Context7, GitHub MCP, and ClickUp MCP all sitting near the same project. Some of that belongs in git. Some of it absolutely does not.
 
 That is where AI workspace configuration stops being personal setup. It becomes repository governance.
 
@@ -81,7 +81,7 @@ For small changes, it is tempting to skip that structure. But shared tooling cha
 
 ## What Belongs In Git
 
-URadar already had useful shared OpenCode configuration:
+The repository already had useful shared OpenCode configuration:
 
 ```text
 AGENTS.md
@@ -115,7 +115,7 @@ npm --prefix .opencode ci
 
 The local-only side is just as important.
 
-URadar now treats these as local machine state:
+The repository now treats these as local machine state:
 
 ```text
 .omo/
