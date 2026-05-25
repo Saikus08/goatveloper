@@ -1,0 +1,197 @@
+---
+title: "When File Uploads Stop Being Just File Uploads"
+description: "A practical URadar case study about distributed systems thinking in a profile picture upload flow."
+pubDate: 2026-05-24
+tags: ["architecture", "backend", "distributed systems", "typescript"]
+series: "Senior Engineering Cases"
+featured: false
+draft: true
+---
+
+A profile picture upload sounds small.
+
+Pick a file. Send it to the backend. Store it somewhere. Save the URL on the user. Show the new avatar.
+
+That is the product story. The systems story is different.
+
+In URadar, this feature touches the browser, an Express route, multer, backend validation, S3 compatible object storage, CloudFront or a public S3 URL, MikroORM, PostgreSQL, and frontend state. None of those pieces share one transaction. Some of them can succeed while another one fails.
+
+That is where a file upload stops being just a file upload. It becomes a small distributed system.
+
+## The Mental Shift
+
+Junior engineers often start with the happy path:
+
+1. Accept the uploaded file.
+2. Store it.
+3. Save the URL.
+4. Return the updated user.
+
+That path matters, but it is not enough. A senior engineer asks what promise each boundary is allowed to make.
+
+The browser can help the user avoid an obvious mistake. It cannot be trusted.
+
+The HTTP boundary can reject large or clearly wrong uploads early. It still receives bytes from outside the system.
+
+The service layer can verify those bytes before treating them as an image. It also has to coordinate state across storage and the database.
+
+Object storage can persist the file. PostgreSQL can persist the user record. They do not commit together.
+
+That last point is the distributed systems lesson hiding inside the feature.
+
+## Boundary One, The Browser
+
+URadar starts in `frontend/src/components/profile/index.tsx`.
+
+The profile screen validates the selected file before it sends anything. It checks the MIME type against JPEG and PNG values. It checks the size against a 2MB limit. Then it appends the file to `FormData` under the `picture` field and calls the profile picture upload API.
+
+After the API succeeds, the frontend updates `profilePictureUrl` in the auth store. The UI can render the new avatar without waiting for a full user reload.
+
+This is good product behavior. It gives fast feedback and avoids wasting a request when the file is obviously wrong.
+
+It is not security.
+
+Anything that runs in the browser is part of the user experience boundary, not the trust boundary. A user can bypass the React component, craft a request, and send different bytes. The backend still has to assume the upload is untrusted.
+
+## Boundary Two, Express And Multer
+
+The backend route lives in `backend/src/routes/auth.route.ts`.
+
+URadar uses `multer.memoryStorage()` for the profile picture endpoint. That choice is only reasonable because the route also applies strict limits: one file, 2MB, and a MIME filter for JPEG and PNG uploads. The route is `POST /me/profile/picture`, protected by `AuthMiddleware`, with multer expecting the single `picture` file field.
+
+This boundary is about request shape and coarse filtering.
+
+Multer is a useful gate. It keeps the handler from receiving many files. It blocks files over the configured limit. It rejects obvious MIME mismatches before the service runs.
+
+But MIME is still metadata supplied with the request. It can be wrong. So this layer should not be the final authority on whether the bytes are actually an image.
+
+That separation keeps the route honest. It handles HTTP mechanics. It does not pretend to own the business guarantee.
+
+## Boundary Three, A Thin Controller
+
+The controller in `backend/src/controllers/users.controller.ts` stays small.
+
+`uploadMyProfilePicture` reads the authenticated user id, extracts the multer file, returns a 400 error if the file is missing, and passes the file buffer, MIME type, original name, and size to `UserService.uploadProfilePicture`.
+
+That is the right level of responsibility for a controller.
+
+It knows about Express. It knows how to shape the response. It does not decide how to verify image bytes, where to store the file, or how to clean up after a partial failure.
+
+In a distributed flow, thin controllers are not just a style preference. They keep coordination logic in one place, where it can be tested without an HTTP server.
+
+## Boundary Four, Backend Byte Validation
+
+The real upload policy sits in `backend/src/services/users.service.ts`.
+
+`UserService.uploadProfilePicture` checks the MIME type again. It checks the 2MB size again. Then it inspects the file signature. PNG files must start with the PNG magic bytes. JPEG files must start with the JPEG signature.
+
+This is the trust boundary.
+
+The service does not accept a file as an image because the browser said so. It does not accept it because the multipart request said so. It verifies the bytes before asking storage to keep them.
+
+That may sound like a security detail, but it is also a systems detail. Bad data that crosses a boundary becomes harder to reason about later. Once the object is stored and its URL is persisted, the mistake has spread.
+
+Good distributed systems design often starts by refusing to distribute invalid state.
+
+## Boundary Five, Object Storage And Public URLs
+
+URadar hides S3 details behind `backend/src/services/storage.service.ts`.
+
+The storage service uploads files with `PutObjectCommand`, deletes files with `DeleteObjectCommand`, and returns a public URL. If a CloudFront domain is configured, the URL uses that domain. Otherwise it falls back to the S3 public URL shape.
+
+For profile pictures, it also generates keys like `users/{userId}/avatar-{timestamp}.{extension}`. The timestamp matters because the public URL changes on each upload, which avoids showing a stale cached avatar.
+
+This abstraction gives the user service a smaller surface to coordinate:
+
+1. Generate the avatar key.
+2. Upload the verified bytes.
+3. Receive the public URL.
+4. Persist that URL on the user.
+5. Delete objects when they no longer match database state.
+
+The storage service does not know when a user record is valid. The user service does not know how to build CloudFront URLs. Each boundary owns its own promise.
+
+## Boundary Six, PostgreSQL Is A Separate System
+
+After storage succeeds, URadar assigns the returned URL to `user.profilePictureUrl` and flushes the MikroORM entity manager.
+
+This is the moment where the distributed systems problem becomes visible.
+
+The object may already exist in S3, while PostgreSQL has not accepted the new user record yet. There is no single transaction covering both systems. If the database flush fails, the app cannot pretend nothing happened. Something did happen. A new object was stored.
+
+URadar handles that with a compensating cleanup.
+
+If `repositoryManager.em.flush()` throws after the upload, the service calls `storageService.deleteFile(key)` for the newly uploaded object, then rethrows the database error. That cleanup is not a magic rollback. It is a best effort action that brings storage back in line with the database record.
+
+This is the core lesson.
+
+When two systems cannot commit atomically, you need to decide what inconsistency can happen and what the code will do about it.
+
+In this flow, the database is the source of truth for which avatar belongs to the user. If the database write fails, the new object should not remain as an unreferenced avatar. Delete it.
+
+## Replacing The Old Avatar
+
+The replacement path has a second cleanup rule.
+
+Before assigning the new URL, the service keeps the previous `profilePictureUrl`. After the database flush succeeds, it extracts the old S3 key from the previous URL and deletes that object.
+
+The timing matters.
+
+Deleting the old avatar before the database write would create a bad failure mode. If the old object is gone and the database flush fails, the user record may still point to an image that no longer exists.
+
+URadar avoids that by deleting the previous avatar only after PostgreSQL has accepted the new URL.
+
+That is distributed systems thinking in a very small form:
+
+1. Keep the old valid state until the new state is durable.
+2. If the new storage write succeeds but the database write fails, delete the new object.
+3. If the database write succeeds, clean up the old object.
+
+The code is not trying to be fancy. It is choosing the least surprising failure mode.
+
+## Tests That Protect The Promise
+
+The tests in `backend/src/test/services/users.service.test.ts` focus on the guarantees that matter.
+
+One test rejects a spoofed image MIME when the bytes are not an image. That protects the trust boundary.
+
+Another test covers a successful upload and replacement. It verifies that the new image is uploaded, the database flush happens, and the old avatar is deleted afterward.
+
+A third test forces the database flush to fail after upload. It verifies that the newly uploaded object is deleted.
+
+Those are not just implementation tests. They describe the system contract:
+
+1. We do not store fake images as profile pictures.
+2. We do not delete the old avatar until the new database state is durable.
+3. We do not leave a newly uploaded object behind when database persistence fails.
+
+That is the kind of test suite you want around a feature that crosses systems.
+
+## The Practical Checklist
+
+For the next URadar upload feature, I would start with this checklist:
+
+1. Define the browser checks for quick feedback, including accepted types and max size.
+2. Match the multipart field name between the frontend `FormData` and the backend route.
+3. Set route limits for file count and byte size before the file reaches business logic.
+4. Treat MIME type as a hint, then verify the bytes in the service layer.
+5. Keep the controller thin, with HTTP concerns only.
+6. Put storage calls behind `StorageService` or an equally small abstraction.
+7. Decide which database record is the source of truth for the uploaded object.
+8. Handle the storage success plus database failure case with explicit cleanup.
+9. Delete replaced objects only after the new database state is saved.
+10. Test spoofed content, successful replacement, and cleanup after persistence failure.
+
+## The Bigger Lesson
+
+Distributed systems are not only queues, event streams, and large clusters.
+
+Sometimes they are a profile picture upload.
+
+The moment one user action changes state in more than one system, you have to think about boundaries, trust, ownership, and partial failure. URadar's upload flow is useful because the code stays concrete. There is a browser check, a multer boundary, byte validation, object storage, URL generation, a PostgreSQL update, and cleanup when one step succeeds but the next one fails.
+
+That is the habit worth building.
+
+Do not ask only, "How do I upload this file?"
+
+Ask, "After this request finishes, which systems believe what, and what happens if they disagree?"
