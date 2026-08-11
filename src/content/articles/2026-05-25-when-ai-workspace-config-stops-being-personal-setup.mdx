@@ -8,38 +8,106 @@ featured: false
 draft: true
 ---
 
-AI tooling setup looks personal at first.
+AI tooling starts as personal setup.
 
-Install the CLI. Add a few agents. Connect a couple of MCP servers. Keep some prompts around. Move fast.
+One developer installs a CLI. Another writes a few slash commands. Someone adds agents, connects MCP servers, stores helpful prompts nearby, and builds a workflow that works on their machine.
 
-That works while the setup lives only in one developer's machine. It stops working when the repository starts depending on those decisions.
+That is fine until the repository starts depending on those choices.
 
-In one real repository, the local workflow had OpenCode agents, Omo continuation state, OpenSpec changes, Context7, GitHub MCP, and ClickUp MCP all sitting near the same project. Some of that belongs in git. Some of it absolutely does not.
+At that point, the question changes. It is no longer, "How do I make my AI workspace comfortable?" It becomes, "How do we give every developer the same useful AI-assisted environment without sharing private identity, session state, or generated files?"
 
-That is where AI workspace configuration stops being personal setup. It becomes repository governance.
+This article is a proof of concept from URadar. The work was not about product behavior. It was about making the repo describe how AI assistance should be used, verified, and bounded.
 
-## The Mental Shift
+## The Problem With Personal Tooling
 
-Junior engineers often see tooling config as an all-or-nothing choice:
+Personal AI setup creates invisible process.
 
-1. Commit everything so the team has the same setup.
-2. Commit nothing because some of it might be local.
+If one developer has the right agents, context files, safety commands, and specs, that developer can move quickly. The next developer may start from scratch, copy stale prompts, or ask the model to work without the project rules that made the first workflow safe.
 
-Both choices are too blunt.
+Nothing obvious fails. There is no red test. No broken build.
 
-A senior engineer asks a different question: what is the contract this repository should own?
+The team pays through repeated setup, uneven review quality, inconsistent AI output, and missing context in generated code.
 
-The repository should own shared behavior: agents, commands, context, specs, safety rules, and reproducible package metadata.
+The proof of concept treated AI workspace setup as a repository concern:
 
-The developer's machine should own identity: tokens, OAuth state, sessions, local caches, generated dependencies, and continuation history.
+1. Shared behavior belongs in git.
+2. Local identity stays on the developer's machine.
+3. The boundary should be documented, not implied.
+4. Verification should test that boundary.
 
-The difference matters because the dangerous files are usually next to the useful ones.
+That framing keeps the setup useful without turning the repository into a dump of local machine state.
 
-## Start With The Spec
+## The Boundary
 
-The first real step was not editing `.gitignore`.
+The useful files and the dangerous files often live near each other.
 
-The first step was creating an OpenSpec change:
+The repo should version shared behavior: agents, commands, project context, specs, safety rules, and package metadata for repo-local tooling.
+
+The developer machine should own identity and execution state: tokens, OAuth state, sessions, caches, local dependencies, environment files, and continuation history.
+
+The boundary looks like this:
+
+```mermaid
+flowchart LR
+  subgraph Git["Versioned repo contract"]
+    Agents["Agents"]
+    Commands["Slash commands"]
+    Context["Project context"]
+    Specs["OpenSpec"]
+    Safety["Safety rules"]
+    Package["Package metadata"]
+  end
+
+  subgraph Local["Developer machine"]
+    Env["Env files"]
+    Tokens["Tokens + auth"]
+    Sessions["Sessions + caches"]
+    Modules["Installed deps"]
+    History["Continuation state"]
+  end
+```
+
+The value is not only convenience. It is consistency.
+
+If an agent writes backend code, it should receive the same architecture rules no matter who runs it. If a slash command checks repo status, the team should share the same command. If OpenSpec defines how larger changes are proposed, AI-assisted work should follow that process too.
+
+## The Proof Of Concept
+
+The shared workspace was built around concrete repo artifacts:
+
+```text
+AGENTS.md
+opencode.jsonc
+.opencode/agents/
+.opencode/commands/
+.opencode/context/
+.opencode/package.json
+.opencode/package-lock.json
+.safety-net.json
+openspec/
+README.md
+.gitignore
+```
+
+Those files are not application features. They are development infrastructure.
+
+`AGENTS.md` gives agents the project rules. `.opencode/agents/`, `.opencode/commands/`, and `.opencode/context/` make useful behavior repeatable. OpenSpec captures planned changes and accepted contracts. `.safety-net.json` records safety expectations. The README explains the workflow for humans.
+
+The `.opencode` package files matter too. If the repo depends on an OpenCode plugin for consistent behavior, then the package metadata that recreates that setup belongs in git.
+
+The reproducible install command was:
+
+```bash
+npm --prefix .opencode ci --ignore-scripts
+```
+
+That is the same principle we use for application dependencies. If the team depends on it, version the metadata that recreates it. The `--ignore-scripts` flag keeps lifecycle scripts from running unless the team explicitly decides they are needed.
+
+## Methodology Before Files
+
+The first serious step was not editing `.gitignore`.
+
+It was writing an OpenSpec change:
 
 ```text
 openspec/changes/version-ai-workspace-config/
@@ -47,75 +115,24 @@ openspec/changes/version-ai-workspace-config/
   tasks.md
 ```
 
-That is a small process decision, but it changes the quality of the work.
+That process decision changed the shape of the work.
 
-Without a spec, the task can collapse into a quick ignore-file patch. With a spec, the work has goals, non-goals, acceptance criteria, and verification steps before the implementation starts.
+Without a spec, the task could collapse into a quick ignore-file patch. With a spec, the change had goals, non-goals, acceptance criteria, and verification before implementation started.
 
 The proposal made the boundary explicit:
 
-- make shared AI workspace configuration reproducible;
-- keep local auth, tokens, sessions, and generated files out of git;
-- document the difference between project configuration and personal machine state;
-- avoid changing application runtime behavior.
+1. Make shared AI workspace configuration reproducible.
+2. Keep local auth, tokens, sessions, caches, and generated files out of git.
+3. Document the difference between project configuration and personal machine state.
+4. Avoid changing application runtime behavior.
 
-That last point is important. This was not a product feature. It was developer workflow infrastructure. Mixing those two concerns would make the change harder to review.
-
-## The Ticket And Branch Boundary
-
-The work also got a ClickUp task before implementation continued.
-
-The branch name carried the task id:
-
-```text
-cu-86ahnww2r-version-ai-workspace-config
-```
-
-That is not ceremony for ceremony's sake. It gives the change a traceable path:
-
-1. OpenSpec explains why the work exists.
-2. ClickUp tracks the delivery task.
-3. The branch connects the code to the task.
-4. The final diff can be reviewed against the spec.
-
-For small changes, it is tempting to skip that structure. But shared tooling changes have a long tail. Months later, someone may wonder why `.omo/` is ignored or why `.opencode/package-lock.json` is versioned. The answer should be findable without asking the person who made the change.
-
-## What Belongs In Git
-
-The repository already had useful shared OpenCode configuration:
-
-```text
-AGENTS.md
-opencode.jsonc
-.safety-net.json
-.opencode/agents/
-.opencode/commands/
-.opencode/context/
-openspec/
-```
-
-Those files describe how the repo expects agents to behave, which commands exist, what project context should be loaded, and which safety rules apply.
-
-That is project knowledge.
-
-It is safe to share because it does not contain a user's credentials. More importantly, it is valuable to share because it keeps collaborators from rebuilding the same workspace rules from memory.
-
-The change also made `.opencode/package.json` and `.opencode/package-lock.json` trackable. That pins the OpenCode plugin dependency for the repository-level setup.
-
-This is the same reasoning as normal application dependencies: if a project depends on a package to behave consistently, the package metadata belongs in source control.
-
-There was one dependency detail worth making explicit. The `.opencode` package should be named, marked `private`, and declare the Node.js range required by its dependency tree. In this case, that means using Node `^20.17.0` or `>=22.9.0` for `.opencode` installs.
-
-A new contributor should be able to recreate the repository-local plugin install with:
-
-```bash
-npm --prefix .opencode ci
-```
+That last point kept the review clean. This was not a backend feature, a React change, or a product experiment. It was repo governance for AI-assisted development.
 
 ## What Must Stay Local
 
-The local-only side is just as important.
+The local-only side is just as important as the shared side.
 
-The repository now treats these as local machine state:
+URadar treats these as machine state:
 
 ```text
 .omo/
@@ -127,77 +144,35 @@ The repository now treats these as local machine state:
 .opencode/**/auth/
 .opencode/**/sessions/
 .opencode/**/cache/
-.opencode/**/*token*.json
-.opencode/**/*auth*.json
-.opencode/**/*session*.json
-.opencode/**/*cache*.json
 ```
 
-`.omo/` contains continuation and session state. That can be useful locally, but it is not a repository contract.
+`.omo/` can contain continuation and session state. `.opencode/node_modules/` is generated output. `.opencode/bun.lock` stays local because the repo standard is npm for this workspace. Env, token, auth, session, and cache patterns protect private identity and local execution state.
 
-`.opencode/node_modules/` is generated dependency output. It should be recreated from package metadata.
+The rule is simple: the repository can describe what tools a developer should have, but it should not contain the developer's credentials, OAuth state, personal tokens, sessions, or cached external-system responses.
 
-`.opencode/bun.lock` stays local because the repo standard is npm. Versioning both npm and Bun lockfiles would send mixed signals about the package manager contract.
+That distinction matters most with MCP servers.
 
-The env, token, auth, session, and cache patterns are defense-in-depth. They are intentionally scoped to directories and JSON-like local state so the repo does not accidentally hide future documentation or source files just because a filename contains a word like `auth`.
+GitHub, Context7, ClickUp, and other integrations can help agents inspect code, consult docs, or connect work to external systems. But MCP auth state is not project configuration. The repo can document expected capabilities. It should not own the identity that satisfies them.
 
-The rule stays stable: credentials and personal state do not belong in git.
-
-## MCP Auth Is Not Project Configuration
-
-GitHub MCP and ClickUp MCP are useful because they connect the development workflow to external systems.
-
-That does not make their auth state project configuration.
-
-The repository can document that the workflow expects GitHub and ClickUp MCP to exist locally. It can document how the project uses ClickUp tasks and branch names. It can even share non-secret MCP endpoint definitions when they contain no credentials.
-
-But it should not own a developer's OAuth state, API token, personal access token, cached task response, or session file.
-
-That distinction is easy to miss. A junior implementation might say, "commit the MCP config so everyone has the same tools." A senior implementation separates the reusable contract from the private identity that satisfies it.
-
-## Gitignore As A Governance Tool
+## Gitignore As Governance
 
 `.gitignore` is often treated as cleanup.
 
-In this kind of change, it is policy.
+Here, it is policy.
 
-The root `.gitignore` now protects repo-level local state like `.omo/` and sensitive `.opencode` patterns. The nested `.opencode/.gitignore` keeps dependency output and Bun lock state local while allowing npm package metadata to be versioned.
+The root `.gitignore` protects repo-level local state like `.omo/` and sensitive `.opencode` patterns. A nested `.opencode/.gitignore` can keep dependency output and local lock state out of git while allowing npm package metadata to be versioned.
 
-That split matters because the repository needed two different rules at the same time:
+The important part is not the ignore syntax. The important part is the ownership model behind it.
 
-1. Do version `.opencode/package.json` and `.opencode/package-lock.json`.
-2. Do not version `.opencode/node_modules/`, sessions, auth, caches, or env files.
+Version the files that describe shared behavior. Ignore the files that contain identity, generated output, caches, or sessions.
 
-The interesting part is not the syntax. The interesting part is the ownership model behind the syntax.
-
-## The Runtime Contract
-
-The final shape was documented in a runtime spec:
-
-```text
-openspec/specs/ai-workspace-configuration.md
-```
-
-That spec lists shared configuration, local-only state, MCP boundaries, maintenance rules, and verification commands.
-
-It was also linked from:
-
-```text
-openspec/project.md
-openspec/specs/README.md
-```
-
-This keeps the boundary discoverable from the same place as other project contracts.
-
-That is another senior habit: do not hide important operational rules in the commit diff. Put them where future work will look.
-
-## Tests That Protect The Boundary
+## Verification As Governance Tests
 
 This change did not need application unit tests.
 
-It needed repository checks.
+It needed repository governance tests.
 
-The verification focused on whether git sees the right files:
+The behavior being protected was the git boundary, so verification used git itself:
 
 ```bash
 git check-ignore .omo/run-continuation/example.json
@@ -207,45 +182,45 @@ git ls-files .omo .opencode/node_modules
 git ls-files .opencode/agents .opencode/commands .opencode/context opencode.jsonc .safety-net.json
 ```
 
-The first group confirms local-only files stay ignored.
+Those checks answer three questions:
 
-The second group confirms no generated or session state is already tracked.
+1. Are local-only files ignored?
+2. Are generated or session files already tracked by mistake?
+3. Are shared agents, commands, context, config, and safety rules visible to git?
 
-The third group confirms shared config is visible to git.
-
-There was also a package metadata check inside `.opencode`:
+The package metadata also needed a consistency check:
 
 ```bash
-npm install --package-lock-only --ignore-scripts
+npm --prefix .opencode ci --package-lock-only --ignore-scripts
 ```
 
-That confirmed the lockfile was consistent without installing dependencies or running package scripts.
+That validates the lockfile without installing dependencies or running package scripts.
 
-This is the same testing mindset applied to a different surface. The behavior being protected is not an HTTP response or a React component. It is the repository boundary.
+This is the same testing mindset applied to a different surface. For application code, the surface might be an API route. For repo governance, the surface is what git will and will not track.
 
 ## The Practical Checklist
 
-For the next shared tooling setup, I would start with this checklist:
+For another repo, I would start here:
 
-1. List the files that describe shared behavior.
-2. List the files that contain local identity, generated output, or session state.
-3. Decide which package manager owns the tooling dependency metadata.
-4. Write the boundary in a spec before changing ignore rules.
-5. Create a tracked task so the change has a reason outside the diff.
-6. Name the branch with the task id.
-7. Version agents, commands, context, safety rules, and package metadata when they are credential-free.
-8. Ignore `.env`, token, auth, session, cache, continuation, and dependency output files.
-9. Verify with `git check-ignore` and `git ls-files`, not just visual inspection.
-10. Review the final diff as if a secret accidentally slipped in.
+1. List the files that describe shared AI behavior.
+2. List the files that contain identity, generated output, caches, or sessions.
+3. Decide which package manager owns repo-local tooling metadata.
+4. Write a spec before changing ignore rules.
+5. Version agents, commands, context, safety rules, docs, and package metadata when they contain no secrets.
+6. Ignore env files, tokens, auth state, sessions, caches, continuation state, and installed dependencies.
+7. Verify the boundary with `git check-ignore` and `git ls-files`.
+8. Review the final diff as if a secret accidentally slipped in.
+
+The checklist is intentionally practical. The point is not process theater. The point is making the shared AI workspace reproducible and reviewable.
 
 ## The Bigger Lesson
 
 Senior engineering is often less about writing more code and more about deciding where a boundary should live.
 
-This case was not complex because the implementation was large. It was complex because the useful files and the dangerous files lived close together.
+In this case, the hard part was separating project knowledge from personal identity.
 
-OpenCode agents are useful project knowledge. Omo session files are local execution history. OpenSpec belongs in git. MCP auth belongs to the developer. Package metadata can be shared. Installed dependencies should be regenerated.
+OpenCode agents are useful project knowledge. Omo session files are local execution history. OpenSpec belongs in git. MCP auth belongs to the developer. Package metadata can be shared. Installed dependencies should be regenerated. Slash commands can define team workflow. Tokens and sessions cannot.
 
-The difference between a junior and senior solution is not that one knows `.gitignore` syntax better.
+That is where AI workspace config stops being personal setup.
 
-It is that the senior solution leaves behind a contract: what the repo owns, what the machine owns, how to verify the boundary, and where the next developer can read the reasoning.
+It becomes a repo contract: what the team shares, what each machine owns, and how AI-generated code is held to the same standards as human-written code.

@@ -75,4 +75,105 @@ const reading = getReadingStats(article.body ?? '');
       </div>
     </div>
   </article>
+
+  <script>
+    const root = document.documentElement;
+    let mermaidModule:
+      | Awaited<typeof import('mermaid')>['default']
+      | undefined;
+
+    const cssVar = (name: string) =>
+      getComputedStyle(root).getPropertyValue(name).trim();
+
+    const prepareMermaidBlocks = () => {
+      document.querySelectorAll<HTMLElement>('.prose pre').forEach((pre) => {
+        const code = pre.querySelector('code');
+
+        if (!code) {
+          return;
+        }
+
+        const isMermaidBlock =
+          pre.dataset.language === 'mermaid' ||
+          code?.className.includes('language-mermaid');
+
+        if (!isMermaidBlock) {
+          return;
+        }
+
+        const source = code.textContent?.trim();
+
+        if (!source) {
+          return;
+        }
+
+        const diagram = document.createElement('div');
+        diagram.className = 'mermaid mermaid-diagram';
+        diagram.dataset.mermaidSource = source;
+        diagram.textContent = source;
+
+        pre.replaceWith(diagram);
+      });
+    };
+
+    const renderMermaid = async () => {
+      prepareMermaidBlocks();
+
+      const diagrams = Array.from(
+        document.querySelectorAll<HTMLElement>('.mermaid-diagram'),
+      );
+
+      if (diagrams.length === 0) {
+        return;
+      }
+
+      mermaidModule ??= (await import('mermaid')).default;
+
+      diagrams.forEach((diagram) => {
+        if (!(diagram instanceof HTMLElement)) {
+          return;
+        }
+
+        diagram.removeAttribute('data-processed');
+        diagram.textContent = diagram.dataset.mermaidSource ?? '';
+      });
+
+      mermaidModule.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: cssVar('--font-ui'),
+        flowchart: {
+          htmlLabels: false,
+        },
+        themeVariables: {
+          background: cssVar('--surface'),
+          primaryColor: cssVar('--surface-strong'),
+          primaryTextColor: cssVar('--text'),
+          primaryBorderColor: cssVar('--border'),
+          secondaryColor: cssVar('--surface-muted'),
+          secondaryTextColor: cssVar('--text'),
+          secondaryBorderColor: cssVar('--border'),
+          tertiaryColor: cssVar('--bg'),
+          tertiaryTextColor: cssVar('--text'),
+          tertiaryBorderColor: cssVar('--border'),
+          lineColor: cssVar('--accent'),
+          textColor: cssVar('--text'),
+          mainBkg: cssVar('--surface-strong'),
+          nodeBorder: cssVar('--border'),
+          clusterBkg: cssVar('--surface'),
+          clusterBorder: cssVar('--border'),
+          edgeLabelBackground: cssVar('--surface'),
+        },
+      });
+
+      await mermaidModule.run({ nodes: diagrams, suppressErrors: true });
+    };
+
+    renderMermaid();
+
+    new MutationObserver(() => {
+      renderMermaid();
+    }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  </script>
 </BaseLayout>

@@ -297,6 +297,15 @@ const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
             return;
           }
 
+          const code = pre.querySelector("code");
+
+          if (
+            pre.dataset.language === "mermaid" ||
+            code?.className.includes("language-mermaid")
+          ) {
+            return;
+          }
+
           const frame = document.createElement("div");
           frame.className = "code-frame";
           const button = document.createElement("button");

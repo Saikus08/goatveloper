@@ -22,7 +22,8 @@
     "@astrojs/sitemap": "^3.7.2",
     "@google/stitch-sdk": "^0.1.0",
     "ai": "^6.0.168",
-    "astro": "^6.1.9"
+    "astro": "^6.1.9",
+    "mermaid": "^11.16.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
