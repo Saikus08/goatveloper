@@ -112,7 +112,13 @@ const summaryFacts = [
           resume.projects.map((project) => (
             <li>
               <strong>
-                <a href={project.href}>{project.name}</a>
+                {
+                  project.href ? (
+                    <a href={project.href}>{project.name}</a>
+                  ) : (
+                    project.name
+                  )
+                }
               </strong>
               <span>{project.description}</span>
             </li>

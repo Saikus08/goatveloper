@@ -6,6 +6,7 @@ status: "active"
 tech: ["Node.js", "Express", "React", "PostgreSQL", "AWS", "Cognito", "Slack", "Microsoft Teams"]
 featured: false
 draft: false
+caseStudySlug: "2026-08-11-uradar-agentic-security-needs-product-and-platform-thinking"
 ---
 
 ## Scope

@@ -11,8 +11,13 @@ import {
 const projects = sortProjectsByNewest(
   (await getCollection('projects')).filter(isPublishedEntry),
 );
+const articles = (await getCollection('articles')).filter(isPublishedEntry);
+const articleById = new Map(articles.map((article) => [article.id, article]));
 const featuredProject = projects[0];
 const remainingProjects = projects.slice(1);
+const featuredCaseStudy = featuredProject.data.caseStudySlug
+  ? articleById.get(featuredProject.data.caseStudySlug)
+  : undefined;
 ---
 
 <BaseLayout
@@ -62,9 +67,18 @@ const remainingProjects = projects.slice(1);
                 </li>
               ))}
             </ul>
-            <a class="button primary" href={`/projects/${featuredProject.id}/`}>
-              Read case study
-            </a>
+            <div class="spotlight-actions">
+              <a class="button primary" href={`/projects/${featuredProject.id}/`}>
+                View project
+              </a>
+              {
+                featuredCaseStudy && (
+                  <a class="button" href={`/articles/${featuredCaseStudy.id}/`}>
+                    Read architecture article
+                  </a>
+                )
+              }
+            </div>
           </div>
         </article>
       </section>
@@ -78,7 +92,18 @@ const remainingProjects = projects.slice(1);
           <h2>Archive</h2>
         </div>
         <ul class="archive-list">
-          {remainingProjects.map((project) => <li><ProjectCard project={project} /></li>)}
+          {remainingProjects.map((project) => (
+            <li>
+              <ProjectCard
+                project={project}
+                caseStudy={
+                  project.data.caseStudySlug
+                    ? articleById.get(project.data.caseStudySlug)
+                    : undefined
+                }
+              />
+            </li>
+          ))}
         </ul>
       </section>
     )

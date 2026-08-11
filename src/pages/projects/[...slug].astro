@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate, isPublishedEntry } from '../../lib/content';
+import { formatDate, getReadingStats, isPublishedEntry } from '../../lib/content';
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects')).filter(isPublishedEntry);
@@ -14,6 +14,14 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content, headings } = await render(project);
+const relatedArticle = project.data.caseStudySlug
+  ? (await getCollection('articles'))
+      .filter(isPublishedEntry)
+      .find((article) => article.id === project.data.caseStudySlug)
+  : undefined;
+const relatedArticleReading = relatedArticle
+  ? getReadingStats(relatedArticle.body ?? '')
+  : undefined;
 ---
 
 <BaseLayout title={project.data.title} description={project.data.description}>
@@ -65,6 +73,28 @@ const { Content, headings } = await render(project);
         )
       }
       <div class="prose">
+        {
+          relatedArticle && relatedArticleReading && (
+            <aside class="project-case-study-card" aria-label="Related engineering case study">
+              <div>
+                <p class="eyebrow">Engineering case study</p>
+                <h2>
+                  <a href={`/articles/${relatedArticle.id}/`}>
+                    {relatedArticle.data.title}
+                  </a>
+                </h2>
+                <p>{relatedArticle.data.description}</p>
+              </div>
+              <a class="project-case-study-link" href={`/articles/${relatedArticle.id}/`}>
+                Read the architecture story
+                <span aria-hidden="true">→</span>
+              </a>
+              <p class="project-case-study-meta">
+                {relatedArticleReading.minutes} min read · {relatedArticle.data.series ?? 'Case study'}
+              </p>
+            </aside>
+          )
+        }
         <Content />
       </div>
     </div>

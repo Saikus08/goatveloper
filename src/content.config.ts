@@ -34,6 +34,7 @@ const projects = defineCollection({
     draft: z.boolean().default(false),
     repoUrl: z.url().optional(),
     demoUrl: z.url().optional(),
+    caseStudySlug: z.string().optional(),
   }),
 });
 

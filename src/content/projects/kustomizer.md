@@ -6,6 +6,7 @@ status: "active"
 tech: ["Angular", "TypeScript", "Shopify", "Supabase", "PostgreSQL"]
 featured: true
 draft: false
+caseStudySlug: "2026-08-11-kustomizer-visual-editing-without-giving-up-headless-architecture"
 ---
 
 ## Problem

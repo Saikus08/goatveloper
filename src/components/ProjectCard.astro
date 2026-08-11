@@ -1,12 +1,13 @@
 ---
-import type { ProjectEntry } from '../lib/content';
+import type { ArticleEntry, ProjectEntry } from '../lib/content';
 import { formatDate } from '../lib/content';
 
 interface Props {
   project: ProjectEntry;
+  caseStudy?: ArticleEntry;
 }
 
-const { project } = Astro.props;
+const { project, caseStudy } = Astro.props;
 const href = `/projects/${project.id}/`;
 ---
 
@@ -21,6 +22,14 @@ const href = `/projects/${project.id}/`;
     <h3><a href={href}>{project.data.title}</a></h3>
     <p class="card-description">{project.data.description}</p>
   </div>
+  {
+    caseStudy && (
+      <a class="project-card-case-study" href={`/articles/${caseStudy.id}/`}>
+        Read the architecture article
+        <span aria-hidden="true">→</span>
+      </a>
+    )
+  }
   {
     project.data.tech.length > 0 && (
       <ul class="tag-list" aria-label="Technologies">

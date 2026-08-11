@@ -7,6 +7,7 @@ tech: ["Node.js", "TypeScript", "CLI", "OpenCode", "Developer Tooling"]
 featured: false
 draft: false
 repoUrl: "https://www.npmjs.com/package/@saikus08/opencode-workbench"
+caseStudySlug: "2026-08-11-opencode-workbench-making-ai-assisted-development-reviewable"
 ---
 
 ## Problem
