@@ -5,7 +5,7 @@ pubDate: 2026-08-11
 tags: ["ecommerce", "frontend", "architecture", "shopify", "product"]
 series: "Senior Engineering Cases"
 featured: false
-draft: true
+draft: false
 ---
 
 Headless e-commerce gives developers a lot of freedom.

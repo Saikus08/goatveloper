@@ -5,7 +5,7 @@ pubDate: 2026-08-11
 tags: ["security", "ai", "backend", "architecture", "saas"]
 series: "Senior Engineering Cases"
 featured: false
-draft: true
+draft: false
 ---
 
 Security products can become noisy very quickly.

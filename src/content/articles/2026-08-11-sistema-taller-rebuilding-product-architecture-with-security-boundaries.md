@@ -5,7 +5,7 @@ pubDate: 2026-08-11
 tags: ["rails", "nextjs", "backend", "security", "testing"]
 series: "Senior Engineering Cases"
 featured: false
-draft: true
+draft: false
 ---
 
 Sistema Taller began as a practical product problem: manage the operational flow of an automotive workshop with enough traceability to be useful.

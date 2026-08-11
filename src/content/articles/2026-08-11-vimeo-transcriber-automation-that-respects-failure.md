@@ -5,7 +5,7 @@ pubDate: 2026-08-11
 tags: ["automation", "python", "playwright", "transcription", "workflow"]
 series: "Senior Engineering Cases"
 featured: false
-draft: true
+draft: false
 ---
 
 The problem was simple: classes were on Vimeo, and I wanted clean text transcripts for studying.

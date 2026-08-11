@@ -5,7 +5,7 @@ pubDate: 2026-08-11
 tags: ["developer tooling", "ai tooling", "typescript", "cli", "workflow"]
 series: "Senior Engineering Cases"
 featured: false
-draft: true
+draft: false
 ---
 
 AI-assisted development gets messy when the workflow lives only on one developer's machine.
