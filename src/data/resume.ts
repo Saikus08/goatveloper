@@ -46,7 +46,7 @@ export const resume: Resume = {
   pdfAvailable: true,
   pdfUrl: "/resume/agustin-vignolo-resume.pdf",
   summary:
-    "Backend and full-stack engineer with QA instincts and product ownership. I build Rails, Node.js, TypeScript, and PostgreSQL systems where authorization, data integrity, integrations, and delivery confidence matter: multi-tenant SaaS, agentic security workflows, e-commerce tooling, and automation platforms.",
+    "Backend and full-stack engineer with QA instincts and product ownership. I build Rails, Node.js, TypeScript, and PostgreSQL systems where authorization, data integrity, integrations, and delivery confidence matter: multi-tenant SaaS, agentic security workflows, grounded AI agents, data-platform test automation, and e-commerce tooling.",
   focusAreas: [
     "Backend and full-stack product engineering for SaaS and internal platforms",
     "Multi-tenant authorization, data integrity, and secure-by-default workflows",
@@ -69,6 +69,12 @@ export const resume: Resume = {
     "TypeScript",
     "JavaScript",
     "Node.js",
+    "Python",
+    "FastAPI",
+    "Java",
+    "Scala",
+    "Apache Spark",
+    "Spring Batch",
     "Express",
     "React",
     "Next.js",
@@ -87,6 +93,9 @@ export const resume: Resume = {
     "Kamal",
     "AWS",
     "Shopify",
+    "Ollama",
+    "RAG",
+    "Railway",
   ],
   experience: [
     {
@@ -107,6 +116,8 @@ export const resume: Resume = {
         "Work across automated and manual testing in agile Scrum environments for complex financial and data-heavy systems.",
         "Coordinate with developers, analysts, and DevOps to validate backend workflows, database behavior, and release readiness.",
         "Design regression coverage, validate Spark/PostgreSQL data workflows, and monitor Jenkins pipelines to protect delivery confidence.",
+        "Build end-to-end QA automation for Momentum, a Java/Scala data platform on Spark and Spring Batch: tests run real batch jobs and compare the resulting data against expected fixtures.",
+        "Contributed staging QA runners and automation for billing and portfolio target flows, and verified releases by testing clean builds of the exact commit being shipped.",
       ],
     },
     {
@@ -172,9 +183,16 @@ export const resume: Resume = {
       href: "/projects/opencode-workbench/",
     },
     {
-      name: "Sistema Taller / Sistema Taller v2",
+      name: "Sistaller",
       description:
-        "Workshop-management product rebuilt from a Next.js/Supabase/RLS foundation into a Rails API + React architecture with tenant-aware services, policies, tests, and CI gates.",
+        "Multi-tenant SaaS for automotive workshops, live at sistaller.com: Rails 8.1 API + React 19 with tenant isolation, Pundit policies, audited service objects, idempotent payments, and CI security gates.",
+      href: "/projects/sistaller/",
+    },
+    {
+      name: "MercaNova AI Assistant",
+      description:
+        "University team project: a FastAPI shopping assistant with tool calling, RAG, and local LLMs through Ollama, where prices and stock always come from the database and no personal data reaches the model.",
+      href: "/projects/mercanova/",
     },
     {
       name: "Vimeo Transcriber",
