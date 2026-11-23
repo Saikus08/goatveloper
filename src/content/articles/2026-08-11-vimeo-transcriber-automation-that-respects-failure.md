@@ -4,9 +4,6 @@ description: "A project case study about building a Python pipeline with Playwri
 pubDate: 2026-08-11
 tags: ["automation", "python", "playwright", "transcription", "workflow"]
 series: "Engineering Notes"
-thumbnail:
-  src: "/brand/goatveloper-full-light.png"
-  alt: "Goatveloper wordmark used as a visual thumbnail for the Vimeo Transcriber case study."
 featured: false
 draft: false
 ---

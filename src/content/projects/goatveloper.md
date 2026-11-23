@@ -4,9 +4,6 @@ description: "A personal software engineering site for articles, project case st
 started: 2026-04-22
 status: "active"
 tech: ["Astro", "TypeScript", "Markdown", "Content Collections"]
-thumbnail:
-  src: "/brand/goatveloper-full-light.png"
-  alt: "Goatveloper wordmark representing the personal engineering site project."
 featured: false
 draft: false
 ---

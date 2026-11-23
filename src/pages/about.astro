@@ -1,12 +1,7 @@
 ---
-import { existsSync } from "node:fs";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../lib/site";
 
-const portraitPath = "/profile/agustin-vignolo-portrait.jpg";
-const portraitAvailable = existsSync(
-  new URL("../../public/profile/agustin-vignolo-portrait.jpg", import.meta.url),
-);
 ---
 
 <BaseLayout
@@ -29,65 +24,18 @@ const portraitAvailable = existsSync(
       </div>
     </div>
 
-    <aside class="about-portrait-panel" aria-label="Portrait">
-      <button
-        class="about-flip-button"
-        type="button"
-        data-flip-card
-        data-flipped="true"
-        aria-pressed="true"
-        aria-label="Show Goatveloper mark"
-      >
-        <span class="about-flip-glow" aria-hidden="true"></span>
-        <span class="about-flip-card">
-          <span class="about-flip-face about-flip-front" aria-hidden="true">
-            <span class="theme-logo theme-logo-themed about-flip-logo">
-              <img
-                class="theme-logo-asset theme-logo-light"
-                src="/brand/goatveloper-full-dark.png"
-                width="2048"
-                height="2048"
-                alt=""
-                loading="eager"
-                decoding="async"
-              />
-              <img
-                class="theme-logo-asset theme-logo-dark"
-                src="/brand/goatveloper-full-light.png"
-                width="2048"
-                height="2048"
-                alt=""
-                loading="eager"
-                decoding="async"
-              />
-            </span>
-          </span>
-
-          <span class="about-flip-face about-flip-back" aria-hidden="true">
-            {
-              portraitAvailable ? (
-                <img
-                  class="about-portrait-image"
-                  src={portraitPath}
-                  alt=""
-                  width="1024"
-                  height="1024"
-                  loading="eager"
-                  decoding="async"
-                />
-              ) : (
-                <span class="about-portrait-placeholder">
-                  <span>AVS</span>
-                </span>
-              )
-            }
-          </span>
-        </span>
-
-        <span class="about-flip-prompt" data-flip-card-prompt>
-          Show Goatveloper
-        </span>
-      </button>
+    <aside class="about-portrait-panel" aria-label="Photo">
+      <figure class="about-photo">
+        <img
+          src="/profile/agustin-vignolo-thesis-presentation.jpg"
+          alt="Agustín Vignolo presenting his degree project at a lectern."
+          width="746"
+          height="780"
+          loading="eager"
+          decoding="async"
+        />
+        <figcaption>Presenting my degree project at ORT University.</figcaption>
+      </figure>
     </aside>
   </section>
 
@@ -109,17 +57,6 @@ const portraitAvailable = existsSync(
         University (Dec 2026), and I run Sistaller, a SaaS for automotive
         workshops that is in production with its first customer.
       </p>
-      <figure class="about-figure">
-        <img
-          src="/profile/agustin-vignolo-thesis-presentation.jpg"
-          alt="Agustín Vignolo presenting his degree project at a lectern."
-          width="746"
-          height="780"
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>Presenting my degree project at ORT University.</figcaption>
-      </figure>
     </div>
 
     <div class="essay-block essay-block-split" data-bleed-line>

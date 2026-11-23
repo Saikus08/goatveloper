@@ -36,12 +36,7 @@ const pinnedCarouselImages = [
     src: '/profile/agustin-vignolo-portrait.jpg',
     alt: 'Portrait of Agustín Vignolo.',
   },
-  {
-    src: featuredArticleData?.thumbnail?.src ?? '/brand/goatveloper-full-light.png',
-    alt:
-      featuredArticleData?.thumbnail?.alt ??
-      'Full Goatveloper wordmark.',
-  },
+  ...(featuredArticleData?.thumbnail ? [featuredArticleData.thumbnail] : []),
 ];
 
 const nowItems = [

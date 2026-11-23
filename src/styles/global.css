@@ -2117,22 +2117,21 @@ main {
   box-shadow: var(--shadow-soft);
 }
 
-.about-figure {
+.about-photo {
   display: grid;
   gap: 0.6rem;
-  width: min(100%, 26rem);
-  margin: 1.5rem 0 0;
+  margin: 0;
 }
 
-.about-figure img {
+.about-photo img {
   width: 100%;
   height: auto;
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow);
 }
 
-.about-figure figcaption {
+.about-photo figcaption {
   color: var(--muted);
   font-size: 0.9rem;
 }
