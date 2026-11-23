@@ -2095,6 +2095,48 @@ main {
   }
 }
 
+/* Photos: homepage avatar and About figure */
+.home-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.home-identity .eyebrow {
+  margin: 0;
+}
+
+.home-avatar {
+  flex: none;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  object-fit: cover;
+  object-position: center 18%;
+  box-shadow: var(--shadow-soft);
+}
+
+.about-figure {
+  display: grid;
+  gap: 0.6rem;
+  width: min(100%, 26rem);
+  margin: 1.5rem 0 0;
+}
+
+.about-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-figure figcaption {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

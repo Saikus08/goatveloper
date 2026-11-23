@@ -29,18 +29,18 @@ const featuredArticleData = featuredArticle?.data as
   | undefined;
 const pinnedCarouselImages = [
   {
-    src: featuredArticleData?.thumbnail?.src ?? '/brand/goatveloper-logo.png',
-    alt:
-      featuredArticleData?.thumbnail?.alt ??
-      'Goatveloper mark used as a visual identity image for the pinned note.',
-  },
-  {
-    src: '/brand/goatveloper-full-light.png',
-    alt: 'Full Goatveloper wordmark on a light background.',
+    src: '/profile/agustin-vignolo-thesis-presentation.jpg',
+    alt: 'Agustín Vignolo presenting his degree project at a lectern.',
   },
   {
     src: '/profile/agustin-vignolo-portrait.jpg',
-    alt: 'Portrait of Agustin Vignolo.',
+    alt: 'Portrait of Agustín Vignolo.',
+  },
+  {
+    src: featuredArticleData?.thumbnail?.src ?? '/brand/goatveloper-full-light.png',
+    alt:
+      featuredArticleData?.thumbnail?.alt ??
+      'Full Goatveloper wordmark.',
   },
 ];
 
@@ -120,7 +120,18 @@ const proofPoints = [
 
     <section class="page-section home-hero" data-reveal style="--reveal-delay: 0ms">
       <div class="home-copy">
-        <p class="eyebrow">{site.author} · {site.role}</p>
+        <div class="home-identity">
+          <img
+            class="home-avatar"
+            src="/profile/agustin-vignolo-portrait.jpg"
+            alt="Portrait of Agustín Vignolo"
+            width="96"
+            height="96"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="eyebrow">{site.author} · {site.role}</p>
+        </div>
         <h1>I build backend systems where the data has to be right.</h1>
         <p class="home-lede">
           I'm a software engineer with 4+ years across Ruby on Rails,
