@@ -3,7 +3,7 @@ title: "URadar: Agentic Security Needs Product And Platform Thinking"
 description: "A project case study about building an agentic workspace-security platform around tenant isolation, collaboration-channel behavior, contextual intervention, and operational trust."
 pubDate: 2026-08-11
 tags: ["security", "ai", "backend", "architecture", "saas"]
-series: "Senior Engineering Cases"
+series: "Project Case Studies"
 featured: false
 draft: false
 ---

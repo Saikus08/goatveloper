@@ -3,7 +3,7 @@ title: "OpenCode Workbench: Making AI-Assisted Development Reviewable"
 description: "A project case study about turning personal AI coding workflows into a published TypeScript CLI with shared context, specs, guardrails, audits, and validation harnesses."
 pubDate: 2026-08-11
 tags: ["developer tooling", "ai tooling", "typescript", "cli", "workflow"]
-series: "Senior Engineering Cases"
+series: "Project Case Studies"
 featured: false
 draft: false
 ---

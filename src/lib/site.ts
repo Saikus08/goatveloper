@@ -1,13 +1,18 @@
 export const site = {
   name: "Goatveloper",
-  author: "Agustin Vignolo",
-  role: "Software Engineer",
+  author: "Agustín Vignolo",
+  role: "Backend & Data Engineer",
   url: import.meta.env.SITE_URL ?? "https://goatveloper.dev",
   description:
-    "Articles, projects, and career notes from a software engineer learning in public.",
+    "Agustín Vignolo, backend and data engineer in Montevideo. Building data-intensive systems where correctness matters, and writing about what I learn along the way.",
+  contact: {
+    email: "agustinvignolosotelo@gmail.com",
+    linkedin: "https://www.linkedin.com/in/agustinvignolo/",
+    github: "https://github.com/Saikus08",
+  },
   nav: [
     { href: "/", label: "Home" },
-    { href: "/articles/", label: "Articles" },
+    { href: "/articles/", label: "Writing" },
     { href: "/projects/", label: "Projects" },
     { href: "/about/", label: "About" },
     { href: "/resume/", label: "Resume" },

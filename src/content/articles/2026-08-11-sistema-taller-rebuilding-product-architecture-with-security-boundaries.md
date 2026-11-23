@@ -3,7 +3,7 @@ title: "Sistema Taller: Rebuilding Product Architecture Around Security Boundari
 description: "A project case study about evolving a workshop-management product from a Next.js/Supabase/RLS foundation into a Rails API and React architecture with tenant-aware services, policies, tests, and CI gates."
 pubDate: 2026-08-11
 tags: ["rails", "nextjs", "backend", "security", "testing"]
-series: "Senior Engineering Cases"
+series: "Project Case Studies"
 featured: false
 draft: false
 ---

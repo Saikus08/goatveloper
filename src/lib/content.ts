@@ -78,3 +78,10 @@ export function getReadingStats(content: string) {
     wordCount,
   };
 }
+
+export const CASE_STUDY_SERIES = "Project Case Studies";
+
+// Case studies are reached from their project page; the Writing index shows notes only.
+export function isNoteEntry(entry: ArticleEntry) {
+  return entry.data.series !== CASE_STUDY_SERIES;
+}

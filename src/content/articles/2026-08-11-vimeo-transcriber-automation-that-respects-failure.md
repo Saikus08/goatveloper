@@ -3,7 +3,7 @@ title: "Vimeo Transcriber: Automation That Respects Failure"
 description: "A project case study about building a Python pipeline with Playwright, ffmpeg, and Whisper to turn private class videos into resumable, checkpointed transcripts."
 pubDate: 2026-08-11
 tags: ["automation", "python", "playwright", "transcription", "workflow"]
-series: "Senior Engineering Cases"
+series: "Engineering Notes"
 featured: false
 draft: false
 ---

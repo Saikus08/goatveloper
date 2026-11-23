@@ -6,6 +6,7 @@ type ResumeLink = {
 type ResumeExperience = {
   role: string;
   company: string;
+  context?: string;
   location?: string;
   period: string;
   highlights: string[];
@@ -24,6 +25,11 @@ type ResumeProject = {
   href?: string;
 };
 
+type ResumeSkillGroup = {
+  label: string;
+  items: string[];
+};
+
 type Resume = {
   name: string;
   role: string;
@@ -33,125 +39,142 @@ type Resume = {
   summary: string;
   focusAreas: string[];
   links: ResumeLink[];
-  skills: string[];
+  skills: ResumeSkillGroup[];
+  languages: string[];
   experience: ResumeExperience[];
   education: ResumeEducation[];
   projects: ResumeProject[];
 };
 
+// Source of truth: ~/career/resume (resume/out/agustin-vignolo-resume.pdf).
+// Keep titles, dates and numbers in sync with that file.
 export const resume: Resume = {
-  name: "Agustin Vignolo Sotelo",
-  role: "Backend & Full-Stack Software Engineer",
-  location: "Montevideo, Uruguay",
+  name: "Agustín Vignolo",
+  role: "Backend & Data Engineer",
+  location: "Montevideo, Uruguay (UTC-3)",
   pdfAvailable: true,
   pdfUrl: "/resume/agustin-vignolo-resume.pdf",
   summary:
-    "Backend and full-stack engineer with QA instincts and product ownership. I build Rails, Node.js, TypeScript, and PostgreSQL systems where authorization, data integrity, integrations, and delivery confidence matter: multi-tenant SaaS, agentic security workflows, grounded AI agents, data-platform test automation, and e-commerce tooling.",
+    "Software engineer building backend and data-intensive systems for financial and multi-tenant platforms. 4+ years across Ruby on Rails, TypeScript and the JVM (Spring Boot, Spring Batch, Spark), focused on data correctness, batch pipelines and AWS deployment.",
   focusAreas: [
-    "Backend and full-stack product engineering for SaaS and internal platforms",
-    "Multi-tenant authorization, data integrity, and secure-by-default workflows",
-    "Rails, Node.js, TypeScript, PostgreSQL, React, Angular, and Shopify integrations",
-    "Test strategy, CI/CD, developer tooling, and AI-assisted engineering workflows",
+    "Data correctness in financial pipelines: reconciliation, invariants and data-quality checks",
+    "Batch processing on the JVM with Spring Batch and Spark",
+    "Multi-tenant SaaS backends on Rails, Node.js and PostgreSQL",
+    "AWS deployment, CI/CD and automated test suites that catch failures early",
   ],
   links: [
     {
-      label: "Docker Dev Containers article",
-      href: "https://setaworkshop.com/blog/docker-for-rails-mongodb",
+      label: "GitHub",
+      href: "https://github.com/Saikus08",
+    },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/agustinvignolo/",
     },
     {
       label: "OpenCode Workbench on npm",
       href: "https://www.npmjs.com/package/@saikus08/opencode-workbench",
     },
+    {
+      label: "Docker Dev Containers article (Seta Workshop blog)",
+      href: "https://setaworkshop.com/blog/docker-for-rails-mongodb",
+    },
   ],
   skills: [
-    "Ruby",
-    "Ruby on Rails",
-    "TypeScript",
-    "JavaScript",
-    "Node.js",
-    "Python",
-    "FastAPI",
-    "Java",
-    "Scala",
-    "Apache Spark",
-    "Spring Batch",
-    "Express",
-    "React",
-    "Next.js",
-    "Angular",
-    "PostgreSQL",
-    "MySQL",
-    "MongoDB",
-    "Supabase",
-    "Redis",
-    "Docker",
-    "GitHub Actions",
-    "Jenkins",
-    "Playwright",
-    "RSpec",
-    "Vitest",
-    "Kamal",
-    "AWS",
-    "Shopify",
-    "Ollama",
-    "RAG",
-    "Railway",
+    {
+      label: "Languages",
+      items: ["Ruby", "TypeScript", "JavaScript", "Python", "Java", "Groovy", "SQL"],
+    },
+    {
+      label: "Backend and data",
+      items: [
+        "Ruby on Rails",
+        "Node.js/Express",
+        "Spring Boot",
+        "Spring Batch",
+        "Apache Spark",
+        "PostgreSQL",
+        "pgvector",
+        "Redis",
+        "Sidekiq",
+        "BullMQ",
+        "RabbitMQ",
+      ],
+    },
+    {
+      label: "Cloud and DevOps",
+      items: ["AWS", "Jenkins", "GitHub Actions", "Docker"],
+    },
+    {
+      label: "AI",
+      items: ["LangGraph", "RAG", "Tool calling", "Guardrails", "Evals"],
+    },
+    {
+      label: "Testing",
+      items: ["RSpec", "Jest", "Playwright", "TestContainers", "TestRail"],
+    },
   ],
+  languages: ["Spanish (native)", "English (C1)"],
   experience: [
+    {
+      role: "Software Engineer, Automation & Development",
+      company: "Advisor Engine",
+      context:
+        "Remote wealth-management platform (teams in the US, Ukraine and Romania) serving large US custodians, broker-dealers and asset managers",
+      period: "Dec 2024 — Dec 2026",
+      highlights: [
+        "Built a Jenkins orchestration pipeline (Groovy) that runs, after each custodian daily load, a validation job (position reconciliation, impossible and unmapped transactions, negative cash margin) and a diagnostic job, across all custodian jobs.",
+        "Created the CI pipeline for the auto data cleanup batch (91 tests previously without CI), catching ~17 failures early in the delivery cycle.",
+        "Fixed a billing staging defect by replacing a duplicated Scala linker with a shared manager in a Spring Batch step (integration-tested with DB fixtures); wrote a spark-submit runner to run the job on staging by date, firm and flags.",
+        "Designed a read-only data-quality monitor (SQL, Python) enforcing 18 invariants across custodian, sleeve, transaction, position and cash/cash-equivalent layers; results exported to CSV for AI-assisted analysis, which surfaced 10 defects filed under one epic.",
+        "Built a TypeScript CLI harness for the shift-left initiative that turns sprint tickets into impact analysis, coverage-gap reports and TestRail cases linked to automation, cutting preparation per ticket from ~90 to ~30 minutes.",
+        "Wrote and maintained automated suites (Java, Groovy, Spring, PostgreSQL) covering batch, billing and performance flows.",
+      ],
+    },
     {
       role: "Technical Lead",
       company: "URadar",
-      period: "2025 — Current",
+      context: "AI-driven cybersecurity training product",
+      period: "Aug 2025 — Sep 2026",
       highlights: [
-        "Leading technical direction for a multi-tenant, agentic workspace-security platform built around real collaboration behavior.",
-        "Working across tenant isolation, RBAC, RAG over tenant-specific knowledge, collaboration-channel/email integrations, and AWS-based delivery concerns.",
-        "Driving architecture decisions, delivery practices, and operational hardening while the product evolves from implementation work into a real business.",
+        "Led architecture of a multi-tenant TypeScript/Express platform (RBAC, Cognito) with a team of developers.",
+        "Built 7 LangGraph agents with a Postgres checkpointer and a RAG pipeline (pgvector, PDF/DOCX ingestion, S3).",
+        "Designed the AWS deployment (EC2, RDS, ALB, S3, SES) and GitHub Actions CI/CD with OIDC.",
       ],
     },
     {
-      role: "QA Engineer",
-      company: "Advisor Engine",
-      period: "Jan 2025 — Current",
-      highlights: [
-        "Work across automated and manual testing in agile Scrum environments for complex financial and data-heavy systems.",
-        "Coordinate with developers, analysts, and DevOps to validate backend workflows, database behavior, and release readiness.",
-        "Design regression coverage, validate Spark/PostgreSQL data workflows, and monitor Jenkins pipelines to protect delivery confidence.",
-        "Build end-to-end QA automation for Momentum, a Java/Scala data platform on Spark and Spring Batch: tests run real batch jobs and compare the resulting data against expected fixtures.",
-        "Contributed staging QA runners and automation for billing and portfolio target flows, and verified releases by testing clean builds of the exact commit being shipped.",
-      ],
-    },
-    {
-      role: "Ruby on Rails Developer",
+      role: "Software Engineer, Ruby on Rails",
       company: "Seta Workshop",
+      context:
+        "Multi-tenant workforce-management platform for construction companies",
       location: "Montevideo, Uruguay",
       period: "Sep 2022 — Dec 2024",
       highlights: [
-        "Worked directly with clients to translate ambiguous business needs into maintainable Rails product work.",
-        "Shipped Rails API/admin work across compliance, reporting, document/export workflows, and content-platform backends.",
-        "Modernized legacy Rails systems, shipped new features, and improved backend maintainability, performance, and scalability.",
-        "Led a major upgrade from Rails 5 / Ruby 2.5 to Rails 7.1 / Ruby 3.3, reducing technical debt and improving security posture.",
+        "Owned backend and frontend of a platform with 120+ models and 50+ API controllers, with schema-per-tenant isolation (Apartment).",
+        "Upgraded the application from Rails 5 / Ruby 2.5 to Rails 7.1 / Ruby 3.3, refactoring legacy code.",
+        "Built scheduled Sidekiq jobs that generate xlsx reports of employee-hours performance and email them to administrators.",
+        "Wrote the report query in raw SQL instead of ActiveRecord for performance: pre-aggregated JSON subqueries avoid row fan-out, polymorphic joins resolve hour concepts and activities, and spreadsheet columns are generated dynamically.",
+        "Applied Ruby metaprogramming (ActiveSupport::Concern, define_method, constantize) in a content API to build a reusable CRUD controller concern deriving model, serializer and nested strong parameters from the controller name.",
       ],
     },
     {
-      role: "Full-Stack Developer",
+      role: "Full-Stack Developer Intern",
       company: "Ventia",
       location: "Montevideo, Uruguay",
       period: "Feb 2022 — Sep 2022",
       highlights: [
-        "Improved existing software systems with new features and performance-focused changes across backend and frontend surfaces.",
-        "Worked across backend and frontend development with Node.js and MongoDB.",
-        "Supported manual, regression, and UAT testing across browsers and devices, documenting issues in Jira and collaborating closely with developers.",
+        "Supported feature work and testing on Node.js and MongoDB applications.",
       ],
     },
   ],
   education: [
     {
-      title: "Bachelor’s Degree in Computer Systems Engineering",
+      title: "BSc Computer Systems Engineering",
       institution: "ORT University, Montevideo",
-      period: "Expected 2026",
+      period: "Dec 2026",
       details: [
-        "Coursework across databases, algorithms, software engineering, networking, infrastructure, statistics, big data, communication, and entrepreneurship.",
-        "Current academic path includes database systems, software engineering foundations and agile practices, infrastructure, programming networks, and data-focused tooling.",
+        "Coursework across databases, algorithms, software engineering, networking, infrastructure, statistics and big data.",
+        "Degree project: Kustomizer, a visual page editor for headless Shopify storefronts.",
       ],
     },
     {
@@ -165,39 +188,28 @@ export const resume: Resume = {
   ],
   projects: [
     {
-      name: "Kustomizer",
+      name: "Sistaller",
       description:
-        "Bachelor’s degree project: an Angular visual editor plus Shopify embedded-app backend for non-technical teams working on headless e-commerce storefronts.",
-      href: "/projects/kustomizer/",
+        "Multi-tenant SaaS for automotive workshops (Rails 8.1 API, React, PostgreSQL). In production for 3 months at a workshop that moved from handwritten records to exact margins per customer, vehicle and order.",
+      href: "/projects/sistaller/",
     },
     {
-      name: "URadar",
+      name: "MercaNova",
       description:
-        "An agentic social intelligence platform for workspace security, built around collaboration-channel behavior, contextual intervention, and multi-tenant operations.",
-      href: "/projects/uradar/",
+        "AI shopping assistant (Python, pgvector, Ollama). Led a 2-person team: hybrid semantic/SQL search, agent loop with 11 guardrails, 20-case evaluation harness, 409+ tests.",
+      href: "/projects/mercanova/",
+    },
+    {
+      name: "Kustomizer",
+      description:
+        "Degree project: visual page editor for headless Shopify storefronts with a component registry and optimistic-locking publish flow (Angular SSR, Remix, Supabase).",
+      href: "/projects/kustomizer/",
     },
     {
       name: "OpenCode Workbench",
       description:
-        "A published TypeScript CLI and workflow kit for OpenCode repositories, standardizing agents, specs, context, repo audits, validation harnesses, and safer AI-assisted development.",
+        "Published TypeScript CLI that standardizes agents, specs, context and validation harnesses for AI-assisted development in OpenCode repositories.",
       href: "/projects/opencode-workbench/",
-    },
-    {
-      name: "Sistaller",
-      description:
-        "Multi-tenant SaaS for automotive workshops, live at sistaller.com: Rails 8.1 API + React 19 with tenant isolation, Pundit policies, audited service objects, idempotent payments, and CI security gates.",
-      href: "/projects/sistaller/",
-    },
-    {
-      name: "MercaNova AI Assistant",
-      description:
-        "University team project: a FastAPI shopping assistant with tool calling, RAG, and local LLMs through Ollama, where prices and stock always come from the database and no personal data reaches the model.",
-      href: "/projects/mercanova/",
-    },
-    {
-      name: "Vimeo Transcriber",
-      description:
-        "A Python automation pipeline using Playwright, ffmpeg, and Whisper to detect class videos, download audio, transcribe in chunks, checkpoint progress, and avoid reprocessing.",
     },
   ],
 };

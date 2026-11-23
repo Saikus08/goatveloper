@@ -22,14 +22,15 @@ const featuredCaseStudy = featuredProject.data.caseStudySlug
 
 <BaseLayout
   title="Projects"
-  description="Project case studies, technical decisions, and build notes."
+  description="Things I have built and run: what the problem was, the decisions behind the system, and what I learned."
 >
   <section class="page-section page-header page-header-essay">
     <p class="eyebrow">Proof of work</p>
     <h1>Projects</h1>
     <p class="page-lede">
-      Case studies for the systems behind the writing. Each one is here to show
-      what was built, why it mattered, and which tradeoffs shaped the result.
+      Systems I have built and run, from a SaaS in production to university and
+      open-source work. Each one covers the problem, the decisions behind it,
+      and the tradeoffs I would make again or change.
     </p>
   </section>
 
@@ -41,8 +42,8 @@ const featuredCaseStudy = featuredProject.data.caseStudySlug
         data-bleed-line
       >
         <div class="section-intro">
-          <p class="eyebrow">Pinned case study</p>
-          <h2 id="featured-project-case-study">Current project</h2>
+          <p class="eyebrow">In production</p>
+          <h2 id="featured-project-case-study">Running now</h2>
         </div>
         <article class="spotlight-card">
           <div class="spotlight-meta">
@@ -74,7 +75,7 @@ const featuredCaseStudy = featuredProject.data.caseStudySlug
               {
                 featuredCaseStudy && (
                   <a class="button" href={`/articles/${featuredCaseStudy.id}/`}>
-                    Read architecture article
+                    Read the case study
                   </a>
                 )
               }

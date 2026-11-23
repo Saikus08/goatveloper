@@ -11,19 +11,20 @@ const portraitAvailable = existsSync(
 
 <BaseLayout
   title="About"
-  description="About Agustin Vignolo and the purpose of Goatveloper."
+  description="About Agustín Vignolo: backend and data engineer in Montevideo, what he is looking for, and why he writes."
 >
   <section class="page-section page-header page-header-essay about-hero">
     <div class="about-hero-copy">
       <p class="eyebrow">About</p>
       <h1>{site.author}</h1>
       <p class="page-lede">
-        I work across product development, quality engineering, and technical
-        delivery, and I’m building Goatveloper as the place where that work
-        becomes clearer in public.
+        I'm a backend and data engineer in Montevideo, Uruguay. I like the
+        part of software where the numbers have to add up: pipelines,
+        reconciliation, multi-tenant data, and the checks that prove a system
+        is doing what it claims.
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="/articles/">Read articles</a>
+        <a class="button primary" href={`mailto:${site.contact.email}`}>Get in touch</a>
         <a class="button" href="/resume/">View resume</a>
       </div>
     </div>
@@ -92,36 +93,60 @@ const portraitAvailable = existsSync(
 
   <section class="page-section essay-stack">
     <div class="essay-block" data-bleed-line>
-      <h2>Why build it this way</h2>
+      <h2>How I got here</h2>
       <p>
-        I have learned a lot through real teams, client work, QA, product
-        delivery, and building things on my own. Writing is how I turn that into
-        something more precise than a list of technologies.
+        I started on Node.js and MongoDB as an intern, then spent two years at
+        Seta Workshop owning a multi-tenant Rails platform end to end, from raw
+        SQL reports to a Rails 5 to 7.1 upgrade. At Advisor Engine I moved to
+        the JVM side of a wealth-management platform serving large US
+        custodians. There I worked on Spring Batch and Spark pipelines and
+        built the reconciliation, validation and data-quality checks around
+        them. In parallel I was technical lead at URadar, a multi-tenant
+        TypeScript platform with LangGraph agents running on AWS.
       </p>
       <p>
-        I want the site to show how I approach decisions, quality, delivery, and
-        growth over time—not only where I have worked.
+        I'm also finishing my BSc in Computer Systems Engineering at ORT
+        University (Dec 2026), and I run Sistaller, a SaaS for automotive
+        workshops that is in production with its first customer.
       </p>
     </div>
 
     <div class="essay-block essay-block-split" data-bleed-line>
       <section>
-        <h2>What I publish here</h2>
+        <h2>What I'm looking for</h2>
         <ul class="plain-list">
-          <li>Notes from building and debugging.</li>
-          <li>Explanations once something finally clicks.</li>
-          <li>Project case studies with decisions and tradeoffs.</li>
+          <li>Remote backend or data engineering roles.</li>
+          <li>Data-intensive products, fintech first.</li>
+          <li>Teams that care about correctness, tests and operability.</li>
+          <li>Good overlap with US hours from Montevideo (UTC-3).</li>
         </ul>
       </section>
 
       <section>
-        <h2>What I want this site to become</h2>
+        <h2>How I work</h2>
         <ul class="plain-list">
-          <li>A body of work that feels earned.</li>
-          <li>A clearer record of how I think and improve.</li>
-          <li>Something another engineer might find useful.</li>
+          <li>Make invariants explicit, then check them automatically.</li>
+          <li>Design jobs to be restartable and idempotent from day one.</li>
+          <li>Put CI around anything that matters, even old code.</li>
+          <li>Write down decisions so the next person can follow them.</li>
         </ul>
       </section>
+    </div>
+
+    <div class="essay-block" data-bleed-line>
+      <h2>Why I write</h2>
+      <p>
+        Writing is how I check that I actually understand what I built. The
+        notes here come from real work: what broke, what I changed, and the
+        tradeoffs I would make again. Some of it should be useful to other
+        engineers too.
+      </p>
+      <p>
+        If you're hiring or want to talk about any of it, email me at
+        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>, or
+        find me on <a href={site.contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        and <a href={site.contact.github} target="_blank" rel="noreferrer">GitHub</a>.
+      </p>
     </div>
   </section>
 </BaseLayout>

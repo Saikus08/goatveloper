@@ -3,7 +3,7 @@ title: "Kustomizer: Visual Editing Without Giving Up Headless Architecture"
 description: "A project case study about building a visual editor and Shopify app around a real e-commerce tradeoff: autonomy for non-technical teams without hiding the engineering boundary."
 pubDate: 2026-08-11
 tags: ["ecommerce", "frontend", "architecture", "shopify", "product"]
-series: "Senior Engineering Cases"
+series: "Project Case Studies"
 featured: false
 draft: false
 ---

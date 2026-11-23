@@ -1,26 +1,71 @@
 ---
 import { getCollection } from 'astro:content';
 import ArticleCard from '../components/ArticleCard.astro';
-import { resume } from '../data/resume';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   type ArticleEntry,
   formatDate,
+  isNoteEntry,
   isPublishedEntry,
   sortByNewest,
 } from '../lib/content';
 import { site } from '../lib/site';
 
-const publishedArticles = sortByNewest(
-  (await getCollection('articles')).filter(isPublishedEntry),
+const publishedNotes = sortByNewest(
+  (await getCollection('articles')).filter(
+    (article) => isPublishedEntry(article) && isNoteEntry(article),
+  ),
 );
 const featuredArticle: ArticleEntry | undefined =
-  publishedArticles.find((article) => article.data.featured) ??
-  publishedArticles[0];
-const articleArchive = publishedArticles
+  publishedNotes.find((article) => article.data.featured) ?? publishedNotes[0];
+const recentNotes = publishedNotes
   .filter((article) => article.id !== featuredArticle?.id)
   .slice(0, 3);
+
+const nowItems = [
+  {
+    label: 'Looking for',
+    title: 'Remote backend and data roles',
+    body: 'Fintech and other data-intensive products first. I work from Montevideo with good overlap with US hours.',
+    href: '/resume/',
+    cta: 'See my resume',
+  },
+  {
+    label: 'Building',
+    title: 'A financial data pipeline, in public',
+    body: 'Starting now: a Spring Batch and Spark pipeline on a public financial dataset of 1M+ rows, with restartable ingestion, reconciliation between jobs, and data-quality rules. I will write up each step here.',
+    href: '/articles/',
+    cta: 'Follow the notes',
+  },
+  {
+    label: 'Running',
+    title: 'Sistaller, a SaaS in production',
+    body: 'Multi-tenant software for automotive workshops. Its first workshop moved from handwritten records to exact margins per customer, vehicle and order.',
+    href: '/projects/sistaller/',
+    cta: 'Read about Sistaller',
+  },
+];
+
+const proofPoints = [
+  {
+    where: 'Advisor Engine',
+    what: 'Designed a data-quality monitor enforcing 18 invariants across custodian, transaction, position and cash data for a US wealth-management platform. It surfaced 10 defects.',
+  },
+  {
+    where: 'Advisor Engine',
+    what: 'Built the Jenkins pipeline that runs position reconciliation and diagnostics after every custodian daily load.',
+  },
+  {
+    where: 'URadar',
+    what: 'Technical lead on a multi-tenant TypeScript platform: 7 LangGraph agents, a RAG pipeline, and the AWS deployment with CI/CD.',
+  },
+  {
+    where: 'Seta Workshop',
+    what: 'Owned a multi-tenant Rails platform with 120+ models and upgraded it from Rails 5 to Rails 7.1.',
+  },
+];
 ---
+
 
 <BaseLayout
   title={site.name}
@@ -52,19 +97,22 @@ const articleArchive = publishedArticles
     </div>
 
     <section class="page-section home-hero" data-reveal style="--reveal-delay: 0ms">
-
       <div class="home-copy">
         <p class="eyebrow">{site.author} · {site.role}</p>
-        <h1>Writing that makes the engineering visible.</h1>
+        <h1>I build backend systems where the data has to be right.</h1>
         <p class="home-lede">
-          Goatveloper is where I write about software, projects, and the parts
-          of the work that only become clear once I slow down and explain them.
+          I'm a software engineer with 4+ years across Ruby on Rails,
+          TypeScript and the JVM. Most recently I worked on a wealth-management
+          platform serving large US custodians, building reconciliation and
+          data-quality checks around Spring Batch and Spark pipelines. This
+          site is my resume, my projects, and what I learn along the way.
         </p>
         <div class="hero-actions">
-          <a class="button primary" href="/articles/">Read articles</a>
-          <a class="button" href="/resume/">View resume</a>
+          <a class="button primary" href="#contact">Get in touch</a>
+          <a class="button" href="/articles/">Read the blog</a>
+          <a class="button" href="/resume/">Resume</a>
         </div>
-        <p class="home-factline">{resume.location}</p>
+        <p class="home-factline">Montevideo, Uruguay · UTC-3 · Open to remote roles</p>
       </div>
 
       {
@@ -99,51 +147,99 @@ const articleArchive = publishedArticles
     </section>
 
     <section
-      class="page-section home-essay"
+      class="page-section home-now"
+      aria-labelledby="home-now-title"
       data-bleed-line
       data-reveal
       style="--reveal-delay: 70ms"
     >
       <div class="section-intro">
-        <p class="eyebrow">Why publish at all</p>
-        <h2>Because good work deserves a thinking trail.</h2>
+        <p class="eyebrow">Now</p>
+        <h2 id="home-now-title">What I'm working on</h2>
       </div>
-      <div class="home-essay-grid">
-        <p>
-          Publishing helps me slow down long enough to understand what the work
-          was really asking from me. Writing reinforces what I built, what I
-          missed, and why a decision mattered.
-        </p>
-        <p>
-          I also believe knowledge should be shared. A lot of improvement
-          happens in community, through people leaving useful trails for each
-          other, and I want this site to do that in my own way.
-        </p>
+      <ul class="now-grid">
+        {nowItems.map((item) => (
+          <li class="now-card">
+            <span class="micro-label">{item.label}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+            <a href={item.href}>
+              {item.cta} <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section
+      class="page-section home-proof"
+      aria-labelledby="home-proof-title"
+      data-bleed-line
+      data-reveal
+      style="--reveal-delay: 100ms"
+    >
+      <div class="section-heading">
+        <div class="section-heading-copy">
+          <p class="eyebrow">Experience</p>
+          <h2 id="home-proof-title">A few things I've shipped</h2>
+        </div>
+        <a href="/resume/">Full resume</a>
       </div>
+      <ul class="split-list">
+        {proofPoints.map((point) => (
+          <li>
+            <strong>{point.where}</strong>
+            <span>{point.what}</span>
+          </li>
+        ))}
+      </ul>
     </section>
 
     {
-      articleArchive.length > 0 && (
+      recentNotes.length > 0 && (
         <section
           class="page-section home-archive"
-          aria-labelledby="selected-writing"
+          aria-labelledby="recent-writing"
           data-bleed-line
           data-reveal
           style="--reveal-delay: 130ms"
         >
           <div class="section-heading">
             <div class="section-heading-copy">
-              <p class="eyebrow">Selected writing</p>
-              <h2 id="selected-writing">More from the archive</h2>
+              <p class="eyebrow">Writing</p>
+              <h2 id="recent-writing">Recent notes</h2>
             </div>
-            <a href="/articles/">All articles</a>
+            <a href="/articles/">All notes</a>
           </div>
           <ul class="archive-list">
-            {articleArchive.map((article) => <li><ArticleCard article={article} /></li>)}
+            {recentNotes.map((article) => <li><ArticleCard article={article} /></li>)}
           </ul>
         </section>
       )
     }
+
+    <section
+      class="page-section home-contact"
+      id="contact"
+      aria-labelledby="home-contact-title"
+      data-bleed-line
+      data-reveal
+      style="--reveal-delay: 160ms"
+    >
+      <div class="section-intro">
+        <p class="eyebrow">Contact</p>
+        <h2 id="home-contact-title">Hiring, or want to talk shop?</h2>
+      </div>
+      <p class="home-contact-lede">
+        I'm looking for remote backend and data roles. Email is the fastest way
+        to reach me.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+        <a class="button" href={site.contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        <a class="button" href={site.contact.github} target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </section>
 
   </div>
 </BaseLayout>

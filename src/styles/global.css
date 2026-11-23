@@ -381,7 +381,8 @@ main {
 
 .footer-links {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
 }
 
 .page-section {
@@ -1710,6 +1711,86 @@ main {
     display: block;
     border-left: 1px solid var(--border);
     padding-left: 1rem;
+  }
+}
+
+/* Home: now, proof and contact sections */
+.now-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.now-card {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  border-top: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem 1rem;
+}
+
+.now-card h3 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.15;
+}
+
+.now-card p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-prose);
+  line-height: 1.55;
+}
+
+.now-card a {
+  color: var(--accent-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.now-card a:hover {
+  text-decoration: underline;
+}
+
+.home-contact-lede {
+  max-width: 36rem;
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+  font-family: var(--font-prose);
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+/* Resume: company context and grouped skills */
+.resume-entry-context {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.skill-groups {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.skill-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.skill-group dd {
+  margin: 0;
+}
+
+@media (min-width: 760px) {
+  .now-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

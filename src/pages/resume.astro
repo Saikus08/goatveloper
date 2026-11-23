@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { resume } from '../data/resume';
+import { site } from '../lib/site';
 
 const summaryFacts = [
-  `${resume.experience.length} roles`,
-  `${resume.projects.length} selected projects`,
-  resume.education[0]?.period ?? 'Education in progress',
+  '4+ years',
+  'Open to remote roles',
+  ...resume.languages,
 ] as const;
 ---
 
@@ -27,7 +28,9 @@ const summaryFacts = [
           <span class="resume-status">PDF resume will appear here once added</span>
         )
       }
-      <a class="button" href="/projects/">View projects</a>
+      <a class="button" href={`mailto:${site.contact.email}`}>Email me</a>
+      <a class="button" href={site.contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+      <a class="button" href={site.contact.github} target="_blank" rel="noreferrer">GitHub</a>
     </div>
     <p class="resume-factline">{summaryFacts.join(' · ')}</p>
   </section>
@@ -52,6 +55,7 @@ const summaryFacts = [
                       {item.company}
                       {item.location && <> · {item.location}</>}
                     </p>
+                    {item.context && <p class="resume-entry-context">{item.context}</p>}
                   </div>
                   <span class="resume-entry-period">{item.period}</span>
                 </div>
@@ -98,10 +102,19 @@ const summaryFacts = [
       </div>
 
       <div>
-        <h2>Technologies I’ve worked with</h2>
-        <ul class="tag-list" aria-label="Technologies I’ve worked with">
-          {resume.skills.map((skill) => <li><span class="tag">{skill}</span></li>)}
-        </ul>
+        <h2>Skills</h2>
+        <dl class="skill-groups">
+          {resume.skills.map((group) => (
+            <div class="skill-group">
+              <dt class="micro-label">{group.label}</dt>
+              <dd>
+                <ul class="tag-list" aria-label={group.label}>
+                  {group.items.map((skill) => <li><span class="tag">{skill}</span></li>)}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
 
@@ -130,7 +143,7 @@ const summaryFacts = [
     {
       resume.links.length > 0 && (
         <section class="resume-section" data-bleed-line>
-          <h2>Selected links</h2>
+          <h2>Links</h2>
           <ul class="split-list">
             {resume.links.map((item) => (
               <li>

@@ -4,7 +4,7 @@ description: "Bachelor’s degree project: a visual editing platform that gives 
 started: 2025-08-01
 status: "active"
 tech: ["Angular", "TypeScript", "Shopify", "Supabase", "PostgreSQL"]
-featured: true
+featured: false
 draft: false
 caseStudySlug: "2026-08-11-kustomizer-visual-editing-without-giving-up-headless-architecture"
 ---
