@@ -22,6 +22,28 @@ const recentNotes = publishedNotes
   .filter((article) => article.id !== featuredArticle?.id)
   .slice(0, 3);
 
+const featuredArticleData = featuredArticle?.data as
+  | (NonNullable<typeof featuredArticle>['data'] & {
+      thumbnail?: { src: string; alt: string };
+    })
+  | undefined;
+const pinnedCarouselImages = [
+  {
+    src: featuredArticleData?.thumbnail?.src ?? '/brand/goatveloper-logo.png',
+    alt:
+      featuredArticleData?.thumbnail?.alt ??
+      'Goatveloper mark used as a visual identity image for the pinned note.',
+  },
+  {
+    src: '/brand/goatveloper-full-light.png',
+    alt: 'Full Goatveloper wordmark on a light background.',
+  },
+  {
+    src: '/profile/agustin-vignolo-portrait.jpg',
+    alt: 'Portrait of Agustin Vignolo.',
+  },
+];
+
 const nowItems = [
   {
     label: 'Looking for',
@@ -117,30 +139,74 @@ const proofPoints = [
 
       {
         featuredArticle && (
-          <article class="home-pinned">
-            <span class="home-pin" aria-hidden="true"></span>
-            <div class="home-pinned-meta">
-              <span class="home-pinned-label">Pinned note</span>
-              <time datetime={featuredArticle.data.pubDate.toISOString()}>
-                {formatDate(featuredArticle.data.pubDate)}
-              </time>
+          <article class="home-pinned" data-pinned-card>
+            <div class="home-pinned-inner">
+              <div class="home-pinned-face home-pinned-front">
+                <span class="home-pin" aria-hidden="true"></span>
+                <div class="home-pinned-meta">
+                  <span class="home-pinned-label">Pinned note</span>
+                  <time datetime={featuredArticle.data.pubDate.toISOString()}>
+                    {formatDate(featuredArticle.data.pubDate)}
+                  </time>
+                </div>
+                <h2>
+                  <a href={`/articles/${featuredArticle.id}/`}>
+                    {featuredArticle.data.title}
+                  </a>
+                </h2>
+                <p>{featuredArticle.data.description}</p>
+                <ul class="tag-list" aria-label="Pinned note topics">
+                  {featuredArticle.data.tags.map((tag) => (
+                    <li>
+                      <span class="tag">{tag}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a class="home-pinned-link" href={`/articles/${featuredArticle.id}/`}>
+                  Read the note
+                </a>
+              </div>
+
+              <div class="home-pinned-face home-pinned-back" aria-hidden="true">
+                <div class="pinned-carousel" data-pinned-carousel>
+                  <div class="pinned-carousel-header">
+                    <span class="home-pinned-label">Image trail</span>
+                    <span data-carousel-count>1 / {pinnedCarouselImages.length}</span>
+                  </div>
+                  <div class="pinned-carousel-frame">
+                    {pinnedCarouselImages.map((image, index) => (
+                      <figure
+                        class:list={["pinned-carousel-slide", { "is-active": index === 0 }]}
+                        data-carousel-slide
+                        aria-hidden={index === 0 ? 'false' : 'true'}
+                      >
+                        <img src={image.src} alt={image.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                      </figure>
+                    ))}
+                  </div>
+                  <div class="pinned-carousel-controls">
+                    <button class="carousel-button" type="button" data-carousel-prev aria-label="Previous pinned note image">
+                      ←
+                    </button>
+                    <a class="home-pinned-link" href={`/articles/${featuredArticle.id}/`}>
+                      Read the note
+                    </a>
+                    <button class="carousel-button" type="button" data-carousel-next aria-label="Next pinned note image">
+                      →
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h2>
-              <a href={`/articles/${featuredArticle.id}/`}>
-                {featuredArticle.data.title}
-              </a>
-            </h2>
-            <p>{featuredArticle.data.description}</p>
-            <ul class="tag-list" aria-label="Pinned note topics">
-              {featuredArticle.data.tags.map((tag) => (
-                <li>
-                  <span class="tag">{tag}</span>
-                </li>
-              ))}
-            </ul>
-            <a class="home-pinned-link" href={`/articles/${featuredArticle.id}/`}>
-              Read the note
-            </a>
+            <button
+              class="home-pinned-tab"
+              type="button"
+              data-pinned-toggle
+              aria-label="Show pinned note image carousel"
+              aria-pressed="false"
+            >
+              <span aria-hidden="true">Flip</span>
+            </button>
           </article>
         )
       }
@@ -242,4 +308,59 @@ const proofPoints = [
     </section>
 
   </div>
+
+  <script>
+    const pinnedCard = document.querySelector('[data-pinned-card]');
+
+    if (pinnedCard instanceof HTMLElement) {
+      const toggle = pinnedCard.querySelector('[data-pinned-toggle]');
+      const backFace = pinnedCard.querySelector('.home-pinned-back');
+      const slides = [...pinnedCard.querySelectorAll('[data-carousel-slide]')];
+      const count = pinnedCard.querySelector('[data-carousel-count]');
+      const prev = pinnedCard.querySelector('[data-carousel-prev]');
+      const next = pinnedCard.querySelector('[data-carousel-next]');
+      let activeSlide = 0;
+
+      const setSlide = (index: number) => {
+        if (slides.length === 0) return;
+
+        activeSlide = (index + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle('is-active', slideIndex === activeSlide);
+          slide.setAttribute('aria-hidden', String(slideIndex !== activeSlide));
+        });
+
+        if (count) {
+          count.textContent = `${activeSlide + 1} / ${slides.length}`;
+        }
+      };
+
+      const setFlipped = (isFlipped: boolean) => {
+        pinnedCard.classList.toggle('is-flipped', isFlipped);
+
+        if (toggle instanceof HTMLButtonElement) {
+          const toggleText = toggle.querySelector('span');
+          toggle.setAttribute('aria-pressed', String(isFlipped));
+          toggle.setAttribute(
+            'aria-label',
+            isFlipped ? 'Show pinned note text' : 'Show pinned note image carousel',
+          );
+
+          if (toggleText) {
+            toggleText.textContent = isFlipped ? 'Back' : 'Flip';
+          }
+        }
+
+        backFace?.setAttribute('aria-hidden', String(!isFlipped));
+      };
+
+      toggle?.addEventListener('click', () => {
+        setFlipped(!pinnedCard.classList.contains('is-flipped'));
+      });
+
+      prev?.addEventListener('click', () => setSlide(activeSlide - 1));
+      next?.addEventListener('click', () => setSlide(activeSlide + 1));
+      setSlide(0);
+    }
+  </script>
 </BaseLayout>

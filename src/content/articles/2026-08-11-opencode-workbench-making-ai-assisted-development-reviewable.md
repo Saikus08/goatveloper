@@ -4,6 +4,9 @@ description: "A project case study about turning personal AI coding workflows in
 pubDate: 2026-08-11
 tags: ["developer tooling", "ai tooling", "typescript", "cli", "workflow"]
 series: "Project Case Studies"
+thumbnail:
+  src: "/brand/goatveloper-logo.png"
+  alt: "Goatveloper mark representing a reviewable AI-assisted development workflow."
 featured: false
 draft: false
 ---

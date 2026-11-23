@@ -99,7 +99,7 @@ const remainingArticles = articles.filter((article) => article.id !== featuredAr
         <div class="section-intro">
           <h2>Archive</h2>
         </div>
-        <ul class="archive-list">
+        <ul class="card-grid">
           {remainingArticles.map((article) => <li><ArticleCard article={article} /></li>)}
         </ul>
       </section>

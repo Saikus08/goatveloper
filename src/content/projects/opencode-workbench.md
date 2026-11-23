@@ -1,9 +1,12 @@
 ---
 title: "OpenCode Workbench"
-description: "An installable workflow kit for OpenCode repositories that standardizes agents, specs, context, and safety-first team workflows." 
+description: "An installable workflow kit for OpenCode repositories that standardizes agents, specs, context, and safety-first team workflows."
 started: 2026-01-26
 status: "active"
 tech: ["Node.js", "TypeScript", "CLI", "OpenCode", "Developer Tooling"]
+thumbnail:
+  src: "/brand/goatveloper-logo.png"
+  alt: "Goatveloper mark representing the OpenCode Workbench developer tooling project."
 featured: false
 draft: false
 repoUrl: "https://www.npmjs.com/package/@saikus08/opencode-workbench"

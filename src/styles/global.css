@@ -873,16 +873,22 @@ main {
 }
 
 .home-pinned {
-  display: grid;
-  gap: 0.85rem;
+  perspective: 1200px;
   width: min(100%, 38rem);
+  min-height: 26rem;
   margin-left: auto;
   transform-origin: top right;
+}
+
+.home-pinned-inner {
+  position: relative;
+  display: grid;
+  min-height: inherit;
+  transform-style: preserve-3d;
   border-top: 1px solid var(--accent);
   border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
   background: color-mix(in srgb, var(--surface) 74%, transparent);
   box-shadow: var(--shadow-soft);
-  padding: 1.35rem 1.2rem 1.45rem;
   backdrop-filter: blur(10px);
   transition:
     transform var(--transition-base),
@@ -890,12 +896,28 @@ main {
     border-color var(--transition-base);
 }
 
-.home-pinned:hover {
+.home-pinned:not(.is-flipped):hover .home-pinned-inner {
   transform: rotate(-0.5deg) translateY(-3px);
   box-shadow: var(--shadow);
 }
 
-.home-pinned::after {
+.home-pinned.is-flipped .home-pinned-inner {
+  transform: rotateY(180deg);
+  box-shadow: var(--shadow);
+}
+
+.home-pinned-face {
+  position: relative;
+  display: grid;
+  grid-area: 1 / 1;
+  align-content: start;
+  gap: 0.85rem;
+  min-width: 0;
+  padding: 1.35rem 1.2rem 1.45rem;
+  backface-visibility: hidden;
+}
+
+.home-pinned-front::after {
   content: "";
   position: absolute;
   top: 0;
@@ -911,6 +933,58 @@ main {
   );
   opacity: 0.58;
   clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+.home-pinned-back {
+  transform: rotateY(180deg);
+  align-content: stretch;
+  background:
+    radial-gradient(
+      circle at top right,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 34%
+    ),
+    color-mix(in srgb, var(--surface) 82%, transparent);
+}
+
+.home-pinned:not(.is-flipped) .home-pinned-back,
+.home-pinned.is-flipped .home-pinned-front {
+  pointer-events: none;
+}
+
+.home-pinned-tab {
+  position: absolute;
+  top: 44%;
+  right: -2.35rem;
+  z-index: 4;
+  display: inline-flex;
+  min-width: 3.1rem;
+  min-height: 2.4rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 74%, var(--border));
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--surface) 86%, var(--accent-soft) 14%);
+  color: var(--accent-strong);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.home-pinned-tab:hover,
+.home-pinned-tab:focus-visible {
+  transform: translateX(0.18rem);
+  background: var(--accent);
+  color: var(--surface);
 }
 
 .home-pin {
@@ -1006,6 +1080,86 @@ main {
   color: var(--accent);
 }
 
+.pinned-carousel {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.pinned-carousel-header,
+.pinned-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pinned-carousel-header {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pinned-carousel-frame {
+  position: relative;
+  overflow: hidden;
+  min-height: 18rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-strong) 64%, transparent);
+}
+
+.pinned-carousel-slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  opacity: 0;
+  transform: scale(1.015);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+.pinned-carousel-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pinned-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-button {
+  display: inline-flex;
+  width: 2.45rem;
+  height: 2.45rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 900;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.carousel-button:hover,
+.carousel-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+}
+
 .home-essay {
   border-top: 0;
 }
@@ -1024,12 +1178,127 @@ main {
   list-style: none;
 }
 
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card-grid > li {
+  min-width: 0;
+}
+
+.card-grid .article-card,
+.card-grid .project-card {
+  height: 100%;
+}
+
 .article-card,
 .project-card {
   display: grid;
   gap: 0.75rem;
-  padding-block: 1.35rem;
-  border-top: 1px solid var(--border);
+  align-content: start;
+  padding: 0 0 1.05rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 5%);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.archive-list .article-card,
+.archive-list .project-card {
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.article-card:hover,
+.project-card:hover,
+.article-card:focus-within,
+.project-card:focus-within {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  box-shadow: var(--shadow-soft);
+}
+
+.archive-list .article-card:hover,
+.archive-list .project-card:hover,
+.archive-list .article-card:focus-within,
+.archive-list .project-card:focus-within {
+  transform: none;
+  box-shadow: none;
+}
+
+.card-thumbnail {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(
+      circle at 24% 20%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(135deg, var(--surface-strong), var(--surface));
+  text-decoration: none;
+}
+
+.card-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform var(--transition-base),
+    opacity var(--transition-base);
+}
+
+.article-card:hover .card-thumbnail img,
+.project-card:hover .card-thumbnail img,
+.article-card:focus-within .card-thumbnail img,
+.project-card:focus-within .card-thumbnail img {
+  transform: scale(1.035);
+}
+
+.card-thumbnail-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent-deep) 22%, transparent),
+      transparent 58%
+    ),
+    repeating-linear-gradient(
+      -18deg,
+      color-mix(in srgb, var(--border) 70%, transparent) 0,
+      color-mix(in srgb, var(--border) 70%, transparent) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  color: color-mix(in srgb, var(--accent-strong) 76%, var(--text));
+  font-family: var(--font-prose);
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  font-weight: 800;
+}
+
+.article-card > :not(.card-thumbnail),
+.project-card > :not(.card-thumbnail) {
+  margin-inline: 1rem;
 }
 
 .archive-entry-body {
@@ -1043,6 +1312,16 @@ main {
   margin: 0;
   font-size: clamp(1.65rem, 3vw, 2.7rem);
   line-height: 1.02;
+}
+
+.card-grid .article-card h3,
+.card-grid .project-card h3 {
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  line-height: 1.08;
+}
+
+.card-grid .card-description {
+  font-size: 0.96rem;
 }
 
 .card-meta,
@@ -1657,6 +1936,28 @@ main {
 
   .home-pinned {
     backdrop-filter: none;
+    width: 100%;
+    min-height: 27rem;
+  }
+
+  .home-pinned-inner {
+    backdrop-filter: none;
+  }
+
+  .home-pinned-tab {
+    top: auto;
+    right: 1rem;
+    bottom: -1.15rem;
+    min-width: 5rem;
+    min-height: 2.25rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 74%, var(--border));
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    writing-mode: horizontal-tb;
+  }
+
+  .pinned-carousel-frame {
+    min-height: 16rem;
   }
 
   .home-tracker {
@@ -1804,5 +2105,32 @@ main {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+
+  .home-pinned,
+  .home-pinned-inner {
+    perspective: none;
+    transform-style: flat;
+  }
+
+  .home-pinned.is-flipped .home-pinned-inner {
+    transform: none;
+  }
+
+  .home-pinned-face {
+    backface-visibility: visible;
+  }
+
+  .home-pinned-back {
+    display: none;
+    transform: none;
+  }
+
+  .home-pinned.is-flipped .home-pinned-front {
+    display: none;
+  }
+
+  .home-pinned.is-flipped .home-pinned-back {
+    display: grid;
   }
 }
