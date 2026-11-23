@@ -60,10 +60,10 @@ Project case studies live in `src/content/projects/`. Keep them short and focuse
 
 The resume page is generated from `src/data/resume.ts`. Its source of truth is the resume in `~/career/resume`: keep titles, dates and numbers in sync with that file.
 
-After rebuilding the resume there, copy the PDF over:
+The site serves the phone-free version of the PDF. After rebuilding the resume there, regenerate `agustin-vignolo-resume-no-phone.pdf` and copy it over:
 
 ```sh
-cp ~/career/resume/out/agustin-vignolo-resume.pdf public/resume/agustin-vignolo-resume.pdf
+cp ~/career/resume/out/agustin-vignolo-resume-no-phone.pdf public/resume/agustin-vignolo-resume.pdf
 ```
 
 Contact links (email, LinkedIn, GitHub) live in `src/lib/site.ts` and are used by the homepage, About, Resume and footer.
